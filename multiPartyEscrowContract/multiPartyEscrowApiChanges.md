@@ -86,12 +86,16 @@ Proposed API:
 
 - GRPC request metadata fields:
   - snet-payment-type - if this field is absent it is an old Job based protocol; if it is a string "escrow" then new MPE contracts protocol is used;
-  - snet-payment-channel-id - id of the payment channel in MPE contract (number in decimal)
-  - snet-payment-channel-nonce - nonce of the payment channel (number in decimal)
-  - snet-payment-channel-amount - payment amount authorized by client (number in decimal)
-  - snet-payment-channel-signature - client payment signature (65 bytes in hex string)
+  - snet-payment-channel-id - id of the payment channel in MPE contract (decimal number)
+  - snet-payment-channel-nonce - nonce of the payment channel (decimal number)
+  - snet-payment-channel-amount - payment amount authorized by client (decimal number)
+  - snet-payment-channel-signature - client payment signature (65 bytes in base64 see [below](#binary-data-encoding))
   - (old) snet-job-address - Job contract instance address to verity payment (32 bytes in hex string)
   - (old) snet-job-signature - Job payment signature (65 bytes in hex string)
+
+### Binary data encoding
+
+gRPC supports sending binary data in metadata fields, such values will be encoded using ```base64``` (see [grpc-metadata.md#storing-binary-data-in-metadata](https://github.com/grpc/grpc-go/blob/master/Documentation/grpc-metadata.md#storing-binary-data-in-metadata) for reference)
 
 ## Blockchain events API
 
