@@ -86,16 +86,20 @@ Proposed API:
 
 - GRPC request metadata fields:
   - snet-payment-type - if this field is absent it is an old Job based protocol; if it is a string "escrow" then new MPE contracts protocol is used;
-  - snet-payment-channel-id - id of the payment channel in MPE contract (decimal number)
-  - snet-payment-channel-nonce - nonce of the payment channel (decimal number)
-  - snet-payment-channel-amount - payment amount authorized by client (decimal number)
-  - snet-payment-channel-signature - client payment signature (65 bytes in base64 see [below](#binary-data-encoding))
+  - snet-payment-channel-id - id of the payment channel in MPE contract (decimal number string see [below](#using-decimal-numbers))
+  - snet-payment-channel-nonce - nonce of the payment channel (decimal number string)
+  - snet-payment-channel-amount - payment amount authorized by client (decimal number string)
+  - snet-payment-channel-signature-bin - client payment signature (65 bytes in base64 see [below](#binary-data-encoding))
   - (old) snet-job-address - Job contract instance address to verity payment (32 bytes in hex string)
   - (old) snet-job-signature - Job payment signature (65 bytes in hex string)
 
+### Using decimal numbers
+
+Some values are represented as decimal number printed to string. The reason is that by their nature these values are incremental counters. Representing them as ```unit256``` value in hex string requires sending 64 bytes for relatively small value. To make representation more compact and clear we have decided keeping them as plain decimal numbers. But client should expect that this number can be as big as ```uint256```, so the best type to represent such values in code is ```BigInteger```.
+
 ### Binary data encoding
 
-gRPC supports sending binary data in metadata fields, such values will be encoded using ```base64``` (see [grpc-metadata.md#storing-binary-data-in-metadata](https://github.com/grpc/grpc-go/blob/master/Documentation/grpc-metadata.md#storing-binary-data-in-metadata) for reference)
+gRPC supports sending binary data in metadata fields. To use this feature metadata key should have ```-bin``` postfix. Caller should pass values for such keys as byte array casted to the string (some implementations may allow passing byte arrays without casting). gRPC library encodes such values using ```base64```. See [grpc-metadata.md#storing-binary-data-in-metadata](https://github.com/grpc/grpc-go/blob/master/Documentation/grpc-metadata.md#storing-binary-data-in-metadata) for reference.
 
 ## Blockchain events API
 
