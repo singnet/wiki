@@ -71,5 +71,103 @@ The following Go code is used to start etcd node and use etcd client:
 There are some [throughput tests](https://github.com/stellarspot/load-testing/tree/master/etcd/snet)
 which runs several etcd nodes locally and measure number of writes, and compare and set requests per seconds.
 
-Note: because the all nodes were run locally the results can be differ from that when each etcd node is run on its
+Note: because all etcd nodes were run locally the results can be differ from that when each etcd node is run on its
 own server.
+
+# Incremental cluster creation approach.
+
+Starting etcd cluster requires that initial size of the cluster was defined during cluster bootstrap.
+It means that the cluster begins to work only when quorum number of nodes join the cluster.
+
+Suppose there are 3 replicas and they want to run 3 ectd nodes.
+When the first replicas starts etcd node it is not able to write and read from the etcd because 2 others
+one more etcd node joins the cluster.
+
+As an alternative it is suggested that the first replica starts with etcd cluster which consists of only one etcd node.
+In this case it will be able to write and records to the etcd.
+When the second replica starts it can find the existed etcd cluster (using the address of the first replica)
+and just adds the second node to the cluster.
+
+This allows to have the working etcd cluster even only some of all replicas are running.
+
+Note: etcd has [Discovery Service Protocol](https://coreos.com/etcd/docs/latest/v2/discovery_protocol.html).
+It is only used in cluster bootstrap phase, and cannot be used for runtime reconfiguration.
+
+# etcd cluster size
+
+According to the [etcd FAQ](https://coreos.com/etcd/docs/latest/faq.html) it is suggested to have
+odd number of etcd nodes in a cluster, usually 3 or 5.
+It also mentions that "*Although larger clusters provide better fault tolerance, the write performance suffers
+because data must be replicated across more machines.*"
+
+# Main algorithm
+
+The following algorithm describes creating and updating etcd cluster during replicas starting
+based on incremental approach.
+
+## Input
+
+Each replica needs to have access to the following info which is provided during the replica starting:
+* etcd cluster token value
+* list of all replicas with corresponding values:
+  * replica id
+  * etcd node name
+  * etcd ip address
+  * ectd client and peer ports
+
+## Cluster Configuration Table
+
+The table with the given columns will be maintained in etcd cluster:
+* replica id
+* timestamp
+* run embedded ectd node
+
+## Replicas to etcd nodes correspondence
+
+Each replica can use the predefined function which return number of etcd nodes which are necessary to run
+for the given number of live replicas.
+
+The function can be described in pseudocode like:
+```
+numberOfEtcdNodes(numberOfReplicas) {
+    1, 2   -> 1
+    3, 4   -> 3
+    5, ... -> 5
+}
+```
+
+## Detecting added and failed replicas
+
+Heartbeat mechanism is suggested to use for replicas failing detection.
+
+Each replica needs to repeatedly write an actual timestamp using the replica id as a key
+to the **Cluster Configuration Table**.
+
+If difference between current time and a replica is higher than a certain threshold the replica
+is considered as dead.
+
+## Detecting failed etcd nodes
+
+etcd [Admin API Documentation](https://coreos.com/etcd/docs/latest/v2/other_apis.html#checking-health-of-an-etcd-member-node)
+provides REST api to check health of etcd node
+
+## Initial state
+
+The first running replica finds that there is no an etcd cluster and starts an embedded etcd instance.
+
+## Main loop
+
+Each replica reads the **Cluster Configuration Table**, checks number of alive replicas and calculates
+number of required etcd nodes using the *numberOfEtcdNodes(numberOfReplicas)* function.
+
+If number of required etcd nodes is less than current number of alive etcd nodes then only one replica
+with the lowest id which does not have running embedded etcd node starts it and adds this node to the current cluster.
+
+There are can be two results:
+* The embedded etcd is successfully run
+* The replica which starts etcd misses the timeout and is considered as dead
+
+If the ectd node starting succeed the replica adds the record to the **Cluster Configuration Table**
+that it has running ectd node.
+
+In both cases the process can be just repeated as is.
