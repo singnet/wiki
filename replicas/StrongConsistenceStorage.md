@@ -51,3 +51,25 @@ Drawback:
 etcd use a quorum to get a consensus during leader election and values writings. It means that if number of
 failed nodes more than half of all nodes then the etcd cluster stops working.
 As it was described before it is a price for the system to have a strong consistency.
+
+# Running and accessing embedded etcd cluster
+
+Starting an etcd node requires at least the following parameters:
+
+* **name**: human-readable name for the node.
+* **listen-client-urls**: list of URLs to listen on for client traffic
+* **listen-peer-urls**: list of URLs to listen on for peer traffic
+* **initial-cluster**: initial cluster configuration for bootstrapping, for example
+  ```name1=http://AAA.BBB.1.1:2380,name2=http://AAA.BBB.1.2:2380```
+* **initial-cluster-token**: initial cluster token for the etcd cluster during bootstrap
+
+
+The following Go code is used to start etcd node and use etcd client:
+* [etcd_storage_server.go](https://github.com/stellarspot/load-testing/blob/master/etcd/snet/etcd_storage_server.go)
+* [etcd_storage_client.go](https://github.com/stellarspot/load-testing/blob/master/etcd/snet/etcd_storage_client.go)
+
+There are some [throughput tests](https://github.com/stellarspot/load-testing/tree/master/etcd/snet)
+which runs several etcd nodes locally and measure number of writes, and compare and set requests per seconds.
+
+Note: because the all nodes were run locally the results can be differ from that when each etcd node is run on its
+own server.
