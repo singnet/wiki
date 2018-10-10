@@ -74,7 +74,51 @@ which runs several etcd nodes locally and measure number of writes, and compare 
 Note: because all etcd nodes were run locally the results can be differ from that when each etcd node is run on its
 own server.
 
-# Incremental cluster creation approach.
+# etcd cluster size
+
+According to the [etcd FAQ](https://coreos.com/etcd/docs/latest/faq.html) it is suggested to have
+odd number of etcd nodes in a cluster, usually 3 or 5.
+It also mentions that "*Although larger clusters provide better fault tolerance, the write performance suffers
+because data must be replicated across more machines.*"
+
+
+#  Proposed solutions
+
+The following solutions are discussed in details in chapters below:
+* Command line etcd cluster creation
+* Fixed size etcd cluster
+* Incremental etcd cluster creation
+
+
+# Command line etcd cluster creation
+
+This approach is to add a command line option to snet-cli which allows to start an etcd instance
+as part of etcd cluster
+
+> snet storage init --name name --token unique-token --client-url http://AAA.BBB.1.1:2379 --peer-url http://AAA.BBB.1.1:2380 --initial-cluster name1=http://AAA.BBB.1.1:2380,name2=http://AAA.BBB.1.2:2380
+
+The list of client-urls then needs to be passed to each replica to have access to the etcd cluster storage.
+
+# Fixed size etcd cluster
+
+This approach assumes that etcd nodes are started by replicas and size of etcd cluster is fixed.
+The initial configuration file contains list of all replicas and information whether it should start etcd node or not:
+
+For example:
+
+| replica id | start etcd node| etcd node name | etcd node client url    | etcd node peer url     |
+|------------|----------------|----------------|-------------------------|------------------------|
+|  replica 1 |             yes|          node1 | http://AAA.BBB.1.1:2379 | http://AAA.BBB.1.1:2380|
+|  replica 2 |             yes|          node2 | http://AAA.BBB.1.2:2379 | http://AAA.BBB.1.2:2380|
+|  replica 3 |             yes|          node3 | http://AAA.BBB.1.3:2379 | http://AAA.BBB.1.3:2380|
+|  replica 3 |              no|
+|  replica 3 |              no|
+|  replica 3 |              no|
+
+Such configuration requires that all replicas which maintain an etcd node needs to be started first
+to have functional etcd cluster.
+
+# Incremental etcd cluster creation approach
 
 Starting etcd cluster requires that initial size of the cluster was defined during cluster bootstrap.
 It means that the cluster begins to work only when quorum number of nodes join the cluster.
@@ -92,15 +136,6 @@ This allows to have the working etcd cluster even only some of all replicas are 
 
 Note: etcd has [Discovery Service Protocol](https://coreos.com/etcd/docs/latest/v2/discovery_protocol.html).
 It is only used in cluster bootstrap phase, and cannot be used for runtime reconfiguration.
-
-# etcd cluster size
-
-According to the [etcd FAQ](https://coreos.com/etcd/docs/latest/faq.html) it is suggested to have
-odd number of etcd nodes in a cluster, usually 3 or 5.
-It also mentions that "*Although larger clusters provide better fault tolerance, the write performance suffers
-because data must be replicated across more machines.*"
-
-# Main algorithm
 
 The following algorithm describes creating and updating etcd cluster during replicas starting
 based on incremental approach.
