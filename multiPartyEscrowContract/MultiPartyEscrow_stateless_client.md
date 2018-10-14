@@ -43,7 +43,7 @@ Everything is obvious.
 ##### current_nonce = signed_nonce + 1, blockchain_nonce = signed_nonce
 It is the situation in which the server has initiated close/reopen procedure, but blockchain still contains the old state,
 and the last signed message has the old nonce.  
-* unspent_amount = blockchain_amount - singed_amount
+* unspent_amount = blockchain_amount - signed_amount
 * next_signed_amount = price
 
 #### current_nonce = signed_nonce + 1, blockchain_nonce = current_nonce
