@@ -97,21 +97,20 @@ We assume the following
 
 snet  mpe-client compile_from_file <proto_dir> <proto_file> 0
 ```
-##### Call the service   
+#### Call the service   
 
-###### JSON params and modifiers
+###### JSON parameters and modifiers
 
-At the given stage parameters for the service itself have to be passed to snet-clie in JSON format 
-(via cmdline parameter, a JSON file or stdin).
+Parameters for the service itself have to be passed to snet-cli in JSON format 
+(via cmdline parameter or via a JSON file, or via stdin).
 
 For example:
 
 ```bash
-'{"image_type": "jpg", "image": "base64 encoded image"}'
+'{"image_type": "jpg", "image": "<base64 encoded image>"}'
 ````
 
-We've implemented several modifiers for this JSON parameter in order to simplify passing big files,
-and have possibility to pass binary data (and not only base64 encoded).
+We've implemented several modifiers for this JSON parameter in order to simplify passing big files, and have possibility to actually pass binary data (and not only base64 encoded).
 
 There are 3 possible modifiers: 
 * file      - read from file
