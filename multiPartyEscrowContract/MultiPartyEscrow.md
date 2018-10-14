@@ -52,7 +52,7 @@ Each "atomic" payment channel in MPE is represented by the following structure
     struct PaymentChannel {
         address sender;      // The account sending payments.
         address recipient;    // The account receiving the payments.
-        uint256 replica_id;  // id of particular service replica
+        uint256 replicaId;  // id of particular service replica
         uint256 value;       // Total amount of tokens deposited to the channel. 
         uint256 nonce;       // "nonce" of the channel (by changing nonce we effectivly close the old channel ([this, channel_id, old_nonce])
                              //  and open the new channel [this, channel_id, new_nonce])
@@ -71,28 +71,28 @@ Comments are selfexplanatory, but few clarifications migth be useful.
 * by changing nonce we effectively close the old channel [MPEContractAddress, channel_id, old_nonce]
   and open the new one [MPEContractAddress, channel_id, new_nonce]. More explanations will be given later.
 * nonce also prevents race condition between between channel_claim and channel_extend_and_add_funds.
-* The full ID of the recipient is [recipient_ethereum_address, replica_id]. By doing this we allow service provider to use the
+* The full ID of the recipient is [recipient_ethereum_address, replicaId]. By doing this we allow service provider to use the
   same ethereum wallet for different replicas.
 
 ##### Functions 
 
 The following function open the new "atomic" channel, assuming that the caller is the sender.
 ```Solidity
-function open_channel(address  recipient, uint256 value, uint256 expiration, uint256 replica_id)
+function openChannel(address  recipient, uint256 value, uint256 expiration, uint256 replicaId)
 ```
 This function simply create new PaymentChannel structure and add it to the channels list.
 
 The following function open the channel from the recipient side.
 ```Solidity
-function open_channel_by_recipient(address  sender, uint256 value, uint256 expiration, uint256 replica_id, bytes memory signature)
+function openChannelByRecipient(address  sender, uint256 value, uint256 expiration, uint256 replicaId, bytes memory signature)
 ```
 The recipient should have the singed permission from the sender to open a channel. 
-This permission contains the following message signed by the sender [MPEContractAdress, recipient_address, replica_id, value, expiration].
+This permission contains the following message signed by the sender [MPEContractAdress, recipient_address, replicaId, value, expiration].
 The recipient should receive this message from the sender off-chain. See usercases for details.
 
 By the following function the recipient can claim funds from the channel.
 ```Solidity
-function channel_claim(uint256 channel_id, uint256 amount, bytes memory signature, bool is_sendback) 
+function channelClaim(uint256 channel_id, uint256 amount, bytes memory signature, bool is_sendback) 
 ```
 The recipent should present the following message, signed by the sender [MPEContractAdress, channel_id, nonce, amount].
 It should be noted that [MPEContractAdress, channel_id, nonce] is the full ID of "atomic" channel. 
@@ -108,10 +108,10 @@ By the following functions the client can extend expiration time and he can add 
 He also can claim all funds from the channel after the expiration time reached.
 
 ```Solidity
-function channel_extend(uint256 channel_id, uint256 new_expiration);
-function channel_add_funds(uint256 channel_id, uint256 amount);
-function channel_extend_and_add_funds(uint256 channel_id, uint256 new_expiration, uint256 amount);
-function channel_claim_timeout(uint256 channel_id);
+function channelExtend(uint256 channel_id, uint256 new_expiration);
+function channelAddFunds(uint256 channel_id, uint256 amount);
+function channelExtendAndAddFunds(uint256 channel_id, uint256 new_expiration, uint256 amount);
+function channelClaimTimeout(uint256 channel_id);
 ```
 
   
@@ -139,8 +139,8 @@ For example server check that signature is authentic, that amount is correct, th
 
 
 
-* CLIENT1 call: open_channel(server=SERVER1, replica=REPLICA1, value=10 AGI, expiration=expiratoin0)
-* MPE create the PaymentChanel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, replica_id=REPLICA1, value=10 AGI, nonce=0, expiration=expiration0]
+* CLIENT1 call: openChannel(server=SERVER1, replica=REPLICA1, value=10 AGI, expiration=expiratoin0)
+* MPE create the PaymentChanel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, replicaId=REPLICA1, value=10 AGI, nonce=0, expiration=expiration0]
 * MPE subtract 10 AGI from the balance of the CLIENT1 
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=0, amount=1)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=0, amount=2)
@@ -148,17 +148,17 @@ For example server check that signature is authentic, that amount is correct, th
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=0, amount=4)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=0, amount=5)
 * Server desides to close/reopen the channel (fix the 5 AGI of the profit)
-* SERVER1 call: channel_claim(channel_id = 0, amount=5, signature = SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=0, amount=5), is_sendback=false)
+* SERVER1 call: channelClaim(channel_id = 0, amount=5, signature = SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=0, amount=5), is_sendback=false)
 * MPE add 5 AGI to the balance of SERVER1
-* MPE change the nonce (nonce +=1) and value (value -= 5) in the PaymentChannel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, replica_id=REPLICA1, value=5 AGI, nonce=1, expiration=expiration0]  
+* MPE change the nonce (nonce +=1) and value (value -= 5) in the PaymentChannel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, replicaId=REPLICA1, value=5 AGI, nonce=1, expiration=expiration0]  
 * Client recieve information that channel have been reopen (either from the server either from listening the events from the blockchain)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=1)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=2)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=3)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=4)
 * Client decides to put more funds in the channel and extend it expiration datas.
-* CLEINT1 calls channel_extend_and_add_funds(channel_id=0, new_expiration = now + 1day, amount=10 AGI)
-* MPE change the value and expiration data in the PaymentChannel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, replica_id=REPLICA1, value=15 AGI, nonce=0, expiration=expiration1]
+* CLEINT1 calls channelExtendAndAddFunds(channel_id=0, new_expiration = now + 1day, amount=10 AGI)
+* MPE change the value and expiration data in the PaymentChannel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, replicaId=REPLICA1, value=15 AGI, nonce=1, expiration=expiration1]
 * MPE subtract 10 AGI from the balance of the CLIENT1
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=5)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=6)
@@ -171,7 +171,7 @@ For example server check that signature is authentic, that amount is correct, th
 * Server decides to close/reopen the channel 
 * .... 
 * This can goes forever
-* If server decides to stop working with this client he could close the channel with channel_claim(...., is_sendback=true)
+* If server decides to stop working with this client he could close the channel with channelClaim(...., is_sendback=true)
 * If server fails to claim funds before timeout (for example he goes offline forever), then the client can claim all funds after the expiration date
 
 
@@ -185,9 +185,9 @@ formal example:
 
 * CLIENT1 calls the SERVER1/REPLICA1 without creating the channel.
 * SERVER1/REPLICA1 replay to the CLIENT1: "You are very welcome to proceed, but please allow me to open the payment channel for us".
-* CLIENT1 sends (off-chain) the signed message SIGNED_BY_CLIENT(ContractAdress=MPEAdress, recipient=SERVER1, replica_id=REPLICA1, value=some_amount, expiration=some_expiration)
-* SERVER1 calls: open_channel_by_recipient(sender=CLIENT1, value=some_amount, expiration=some_expiration, replica_id=REPLICA1, signature = SIGNED_BY_CLIENT(ContractAdress=MPEAdress, recipient=SERVER1, replica_id=REPLICA1, value=some_amount, expiration=some_expiration))
-* MPE create the PaymentChanel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, replica_id=REPLICA1, value="some_amount" AGI, nonce=0, expiration="some_expiration"]
+* CLIENT1 sends (off-chain) the signed message SIGNED_BY_CLIENT(ContractAdress=MPEAdress, recipient=SERVER1, replicaId=REPLICA1, value=some_amount, expiration=some_expiration)
+* SERVER1 calls: openChannelByRecipient(sender=CLIENT1, value=some_amount, expiration=some_expiration, replicaId=REPLICA1, signature = SIGNED_BY_CLIENT(ContractAdress=MPEAdress, recipient=SERVER1, replicaId=REPLICA1, value=some_amount, expiration=some_expiration))
+* MPE create the PaymentChanel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, replicaId=REPLICA1, value="some_amount" AGI, nonce=0, expiration="some_expiration"]
 * MPE subtract "some_amount" AGI from the balance of the CLIENT1
 * SERVER1 wait conformation from the blockchain that channel was created
 * usual workflow can be started now.
@@ -198,13 +198,13 @@ formal example:
 * Service provider can use the same ethereum address for all replicas or he can use different address. 
 In any case, the replicas very rarely need to send on-chain transactions. It means, that we actually don't need to provide the demons with direct access to the private key. 
 Instead it could be some centralized server to sign the transactions from the daemons (in some cases it even can be done in semi-manual manner by the service owner). 
-* open_channel_by_recipient it is simply a way to force the server to pay the gas for channel creation.
-* By the similar technique we could force the server to pay the gas for channel_extend_and_add_funds  (extend the expiration date and add funds to the channel)
+* openChannelByRecipient it is simply a way to force the server to pay the gas for channel creation.
+* By the similar technique we could force the server to pay the gas for channelExtendAndAddFunds  (extend the expiration date and add funds to the channel)
 * In the current version the client sign off-chain authorization messages with the ethereum private key. It means that, unlike the server, the client should have access to the privet key almost constantly. We could easily change it by using different key for signing off-chain messages, but I don't think that we should, because signing with the ethereum private key makes MPE much more compact.
 * Server do not need to wait the confirmation from the blockchain after he sends on-chain request to close/reopen the channel
   (after he fix the profit and ask MPE to change the nonce of the channel). He can inform the client that nonce of the channel have changed
-  (that old atomic  channel have been closed and new atomic chanel have been opened). The server can start accepting calls from the client with a new nonce. It can be shown that it is secure for both the client and the server, if transaction is accepted by blockchain before expiration date of the channel. Similary the client don't need to wait the confirmation from the blockchain after sending channel_extend_and_add_funds. It makes MPE functional even on very slow Ethereum network.  
-* nonce in the channel prevent race condition between channel_extend_and_add_funds and channel_claim. If the client send channel_extend_and_add_funds request and at the same time the
-server sends channel_claim request. Then, as have been said before, they can continue to work without receiving confirmation from blockchain. 
-But it is also doesn't matter which request will be accepted first (because channel_claim only change the nonce, and not create new PaymentChannel structure).
+  (that old atomic  channel have been closed and new atomic chanel have been opened). The server can start accepting calls from the client with a new nonce. It can be shown that it is secure for both the client and the server, if transaction is accepted by blockchain before expiration date of the channel. Similary the client don't need to wait the confirmation from the blockchain after sending channelExtendAndAddFunds. It makes MPE functional even on very slow Ethereum network.  
+* nonce in the channel prevent race condition between channelExtendAndAddFunds and channelClaim. If the client send channelExtendAndAddFunds request and at the same time the
+server sends channelClaim request. Then, as have been said before, they can continue to work without receiving confirmation from blockchain. 
+But it is also doesn't matter which request will be accepted first (because channelClaim only change the nonce, and not create new PaymentChannel structure).
 
