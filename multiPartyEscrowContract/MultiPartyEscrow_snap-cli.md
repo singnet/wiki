@@ -24,10 +24,10 @@ addreses.
 We will assume that snet-cli use the first address as identity, and
 the service use the second address.
 
-You can run the following commands
+You can run the following test
 
 ```bash
-# create idenity in snet-cli (probably you've alread done it) 
+# create identity in snet-cli (probably you've already done it) 
 snet identity create snet-user key --private-key 0xc71478a6d0fe44e763649de0a0deb5a080b788eefbbcf9c6f7aef0dd5dbd67e0
 snet identity snet-user
 
@@ -78,5 +78,67 @@ snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e c
 # ['0x592E3C0f3B038A0D673F19a18a773F993d4b2610', '0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB', 0, 420000, 1, <...>]
 
 # You can try to claim timeout now. It will not be possible ~24 hours... 
-
 ```
+
+### Call the server using MPE channel
+
+Here we consider low level functionality for calling services via snap-cli.
+We assume the following
+* You downloaded proto file for selected service (from IPFS metadata)
+* You opened the payment channel in MPE with a given service replica (see previous section)
+* You know the endpoint of selected replica (from IPFS metadata)
+
+##### Compile protobuf for service at the given payment channel
+ 
+```bash
+# proto_dir - directory in which we have .proto file
+# prot_file - name of .proto file
+# 0         - channel_id of the channel
+
+snet  mpe-client compile_from_file <proto_dir> <proto_file> 0
+
+##### Call the service   
+
+####### JSON params and modifiers
+
+At the given stage parameters for the service itself have to be passed to snet-clie in JSON format 
+(via cmdline parameter, a JSON file or stdin).
+
+For example:
+
+```bash
+'{"image_type": "jpg", "image": "base64 encoded image"}'
+````
+
+We've implemented several modifiers for this JSON parameter in order to simplify passing big files,
+and have possibility to pass binary data (and not only base64 encoded).
+
+There are 3 possible modifiers: 
+* file      - read from file
+* b64encode - encode to base64
+* b64decode - decode from base64
+
+for example if you pass the following JSON as parameter then as "image" parameter we will use base64 encoded content of "1.jpeg"
+
+```bash 
+'{"image_type": "jpg", "file@b64enode@image": "1.jpeg"}'
+```
+
+If we remove b64encode modifier from the previous example then we will pass 1.jpeg image in binary format without base64 encoding.  
+
+####### Make a call
+
+Let's make a call to the server with the following parameters
+* 0x39ee715b50e78a920120c1ded58b1a47f571ab75 - address of MultiPartyEscrow contract
+* 0 - channel_id
+* 1 - nonce of the channel
+* 20010 - total amount which was already spent in this channel plus price for this call
+* localhost:8080 - endpoint
+* classify - name of method which we want to call
+* '{"image_type": "jpg", "file@b64encode@image": "file.jpeg"}' - JSON parameters for the server. Because of modifier we will use base64 encoded content of file.jpeg as "image" parameter 
+
+```bash
+ snet mpe-client call_server 0x39ee715b50e78a920120c1ded58b1a47f571ab75 0 1 20010 localhost:8080 classify '{"image_type": "jpg", "file@b64encode@image": "file.jpeg"}'
+``` 
+
+
