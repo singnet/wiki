@@ -35,12 +35,12 @@ In all cases we are interesting in two numbers:
 * The amount of tokens which haven't been already spent (unspent_amount)
 * Next amount which has to be signed (next_signed_amount), taking into account the price for the current call (price).
  
-##### Simple case current_nonce == signed_nonce == blockchain_nonce
+#### Simple case current_nonce == signed_nonce == blockchain_nonce
 Everything is obvious.
 * unspent_amount = blockchain_value - signed_amount
 * next_signed_amount = signed_amount + price
 
-##### current_nonce = signed_nonce + 1, blockchain_nonce = signed_nonce
+#### current_nonce = signed_nonce + 1, blockchain_nonce = signed_nonce
 It is the situation in which the server has initiated close/reopen procedure, but blockchain still contains the old state,
 and the last signed message has the old nonce.  
 * unspent_amount = blockchain_amount - signed_amount
@@ -51,7 +51,7 @@ It is the situation in which the server has initiated close/reopen procedure, an
 * unspent_amount = blockchain_amount
 * next_signed_amount = price
 
-### current_nonce = signed_nonce, blockchain_nonce = current_nonce - 1
+#### current_nonce = signed_nonce, blockchain_nonce = current_nonce - 1
 It is the situation in which the server has initiated close/reopen procedure, but blockchain still contains the old state. But this client has already used this new channel, and last signed message has the new nonce.
 * unspent_amount = current_value - signed_amount
 * next_signed_amount = signed_amount + price
