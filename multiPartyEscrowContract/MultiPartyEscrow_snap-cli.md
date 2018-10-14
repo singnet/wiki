@@ -88,7 +88,7 @@ We assume the following
 * You opened the payment channel in MPE with a given service replica (see previous section)
 * You know the endpoint of selected replica (from IPFS metadata)
 
-##### Compile protobuf for service at the given payment channel
+#### Compile protobuf for service at the given payment channel
  
 ```bash
 # proto_dir - directory in which we have .proto file
@@ -99,7 +99,7 @@ snet  mpe-client compile_from_file <proto_dir> <proto_file> 0
 ```
 ##### Call the service   
 
-####### JSON params and modifiers
+###### JSON params and modifiers
 
 At the given stage parameters for the service itself have to be passed to snet-clie in JSON format 
 (via cmdline parameter, a JSON file or stdin).
@@ -126,7 +126,7 @@ for example if you pass the following JSON as parameter then as "image" paramete
 
 If we remove b64encode modifier from the previous example then we will pass 1.jpeg image in binary format without base64 encoding.  
 
-####### Make a call
+###### Make a call
 
 Let's make a call to the server with the following parameters
 * 0x39ee715b50e78a920120c1ded58b1a47f571ab75 - address of MultiPartyEscrow contract
