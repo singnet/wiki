@@ -40,11 +40,11 @@ snet contract  MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e 
 # 1000000
 
 # open the channel for the second account (for 420000 cogs), replicaID=0
-# Expiration is set in block number. 
-# You can see the last block number with the following commands
+# Expiration is set in block numbers. 
+# You can see the last block number with the following command
 snet mpe-client block_number 
 
-# We set expiration, one block in the past. 
+# We set expiration as current_block - 1
 EXPIRATION=$((`snet mpe-client block_number` - 1))
 snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e openChannel  0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB 420000 $EXPIRATION 0 --transact -y
 
@@ -56,7 +56,7 @@ snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e c
 snet contract  MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e balances 0x592E3C0f3B038A0D673F19a18a773F993d4b2610
 # 580000
 
-#We can immediately claim timeout 
+#We can immediately claim timeout because expiration was set in the past
 snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e channelClaimTimeout 0 --transact -y
 
 # check balance of the First account in MPE (it should be 1000000 now)
@@ -96,7 +96,7 @@ We assume the following
 # 0         - channel_id of the channel
 
 snet  mpe-client compile_from_file <proto_dir> <proto_file> 0
-
+```
 ##### Call the service   
 
 ####### JSON params and modifiers
