@@ -27,7 +27,7 @@ Before considering all possible cases, let's define the following parameters
 * blockchain_value - value of the channel in the blockchain
 
 We also assume that the daemon starts close/reopen procedure only after previous channelClaim request was mined.
-It means that the current_nonce, at maximum one point ahead of blockchain_nonce. We can easily relax this assumption if necessary.   
+It means that the current_nonce, at maximum, one point ahead of blockchain_nonce. We can easily relax this assumption if necessary.   
 
 In all cases we assume that client verify that it's own signature is authentic.  
 
@@ -52,9 +52,9 @@ It is the situation in which the server has initiated close/reopen procedure, an
 * next_signed_amount = price
 
 #### current_nonce = signed_nonce, blockchain_nonce = current_nonce - 1
-It is the situation in which the server has initiated close/reopen procedure, but blockchain still contains the old state. But this client has already used this new channel, and last signed message has the new nonce.
+It is the situation in which the server has initiated close/reopen procedure, but blockchain still contains the old state. But the client has already used this new channel, and last signed message has the new nonce.
 * unspent_amount = current_value - signed_amount
 * next_signed_amount = signed_amount + price
 
-It should be noted that in this case, in order to calculate unspent_amount we rely on information from the server (current_value).
-Server cannot gain tokens by manipulating this value, but he could "force" the client to put more tokens in the channel (by saying that current_value is low). If we consider it as a problem, we could ask the daemon to send as the last state which was actually used in channelClaim (for close/reopen logic). Maybe we will include this fields in the final design instead of "current_value".
+It should be noted that in this case, in order to calculate unspent_amount, we rely on information from the server (current_value).
+Server cannot gain tokens by manipulating this value, but he could "force" the client to put more tokens in the channel (by saying that current_value is low). If we consider it as a problem, we could ask the daemon to send the last state which was actually used in channelClaim (for close/reopen logic). Maybe we will include this fields in the final design instead of "current_value".
