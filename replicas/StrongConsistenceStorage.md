@@ -1,17 +1,22 @@
 # Strong consistency storage used by replicas
 
-The aim of this document is to describe storage with strong consistency guaranties used by replicas.
+The aim of this document is to describe a distributed storage with strong consistency guaranties used by replicas.
 
 # Justification
 
-Design of multiPartyEscrowContract implies that there can be multiple replicas per service.
+Design of MultiPartyEscrowContract implies that there can be multiple replicas per service.
 
 There are some options how a client can interact with replicas:
 1. Open new payment channel for each replica
-1. Using the same payment channel for all replicas
+1. Using the same payment channel for some or all replicas
 
 The first way allows to keep information about payment locally on each replica but the client needs to pay for each
 new payment channel.
+
+The first way allows to keep information about payment locally on each replica but it has some obvious drawbacks
+related to the fact that opening a channel requires writing to the blockchain:
+* client should pay a gas for opening channel
+* this operation takes some relatively big time
 
 The second option requires that all replicas uses the same storage to save information about payment channel
 and check that the same payment is not used twice on different replicas.
@@ -38,18 +43,27 @@ only one option is allowed either strong consistency or availability with eventu
 
 # Considered storages
 
-The following systems were considered:
-- [etcd](https://github.com/etcd-io/etcd)
-- [consoul](https://github.com/hashicorp/consul)
-- [zookeeper](https://github.com/apache/zookeeper)
+We are looking for simple distributed storage with strong consistence guarantee which can be run by replicas
+(e. g. easily integrated into Go program).
 
-etcd was chosen because of two reasons: it has original support for
-[embedded version](https://godoc.org/github.com/coreos/etcd/embed)
-and it is written in Go and thus its nodes can be started and stopped by snet-daemon which is written in Go as well.
+Some storages under consideration:
 
-Drawback:
-etcd use a quorum to get a consensus during leader election and values writings. It means that if number of
-failed nodes more than half of all nodes then the etcd cluster stops working.
+| Distributed Storage                            |Language| Consensus Algorithm| Embedding  server
+|------------------------------------------------|--------|--------------------|---------
+|[etcd](https://github.com/etcd-io/etcd)         | Go     | Raft               | [native](https://godoc.org/github.com/coreos/etcd/embed)
+|[consul](https://github.com/hashicorp/consul)   | Go     | Raft               | [under question](https://github.com/hashicorp/consul/issues/467)
+|[zookeeper](https://github.com/apache/zookeeper)| Java   | ZAB                | as java process
+
+
+etcd was chosen because it is written in Go and has out of the box embedded server support.
+It means that its nodes can be started and stopped by snet-daemon replicas.
+
+It is not clear is it possible to run consul server agent from a Go application.
+At least it is not easy to find information about it.
+
+
+`Note`: all these storages use a quorum to get a consensus during leader election and values writings.
+It means that if number of failed nodes more than half of all nodes then the the cluster stops working.
 As it was described before it is a price for the system to have a strong consistency.
 
 # Running and accessing embedded etcd cluster
@@ -155,7 +169,10 @@ Each replica needs to have access to the following info which is provided during
 The table with the given columns will be maintained in etcd cluster:
 * replica id
 * timestamp
-* run embedded ectd node
+* running etcd server node flag
+
+The last field indicates that a replica started etcd server instance and it had been alive at the time when the
+record to the Cluster Configuration Table was written.
 
 ## Replicas to etcd nodes correspondence
 
