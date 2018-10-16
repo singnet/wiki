@@ -10,9 +10,6 @@ There are some options how a client can interact with replicas:
 1. Open new payment channel for each replica
 1. Using the same payment channel for some or all replicas
 
-The first way allows to keep information about payment locally on each replica but the client needs to pay for each
-new payment channel.
-
 The first way allows to keep information about payment locally on each replica but it has some obvious drawbacks
 related to the fact that opening a channel requires writing to the blockchain:
 * client should pay a gas for opening channel
