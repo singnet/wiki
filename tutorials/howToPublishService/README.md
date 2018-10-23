@@ -1,12 +1,14 @@
 # Tutorial - How to Publish a Service
 
 -------------------------------
+
 _Before following this tutorial, make sure you've installed_
 
 * _Docker (https://www.docker.com/)_
 * _Metamask (https://metamask.io)_
 
 _You will need a private-public key pair to register your service in SNET. Generate them in Metamask before you start this turorial._
+
 -------------------------------
 
 In this tutorial we'll publish a basic service in SingularityNET using Kovan Test Network.
