@@ -40,6 +40,7 @@ apt install -y python3-pip
 
 apt install -y nodejs
 apt install -y npm
+
 ################################################################################
 # Manually install nodejs and npm in base images without the proper packages
 #
@@ -53,6 +54,8 @@ apt install -y npm
 apt install -y golang-1.10
 mkdir /opt/snet/go
 #echo 'PS1="$PS1\n"' >> /root/.bashrc
+export GOPATH="/opt/snet/go"
+export PATH="$PATH:/opt/snet/go/bin:/usr/lib/go-1.10/bin"
 echo 'export GOPATH="/opt/snet/go"' >> /root/.bashrc
 echo 'export PATH="$PATH:/opt/snet/go/bin:/usr/lib/go-1.10/bin"' >> /root/.bashrc
 source /root/.bashrc
@@ -91,7 +94,7 @@ cp snetd-linux-amd64 /usr/local/bin/snetd
 
 # CLI
 
-pip3.6 install --upgrade pip
+pip3 install --upgrade pip
 apt install -y libusb-1.0-0-dev libudev1 libudev-dev
 mkdir -p /tmp/install
 cd /tmp/install
