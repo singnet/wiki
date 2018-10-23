@@ -11,12 +11,12 @@ We have special grpc method in daemon which return state of the channel (https:/
 
 The client receive the following information from the daemon
 * current_nonce - current nonce of the payment channel
-* current_signed_amount -  a last amount which were signed by client with current_nonce. If none messages was signed with the current_nonce then this value is empty byte string (b''), which we should iterpret as 0.
-* current_signature - a last signature sent by client with current_nonce it could be abset (empty string) if none message was signed with current nonce
+* current_signed_amount -  a last amount which were signed by client with current_nonce. If none messages was signed with the current_nonce then this value is empty byte string (b''), which we should interpret as 0.
+* current_signature - a last signature sent by client with current_nonce it could be absent (empty string) if none message was signed with current nonce
 * (not implemented yet) oldnonce_signed_amount - last amount which was signed by client with nonce=current_nonce - 1
 * (not implemented yet) oldnonce_signature - last signature sent by client with nonce = current_nonce - 1
 
-(It should be noted that two last values are not in the current version, and need them only for calculate lower_bound_unspent_amount in the case then current_nonce != blockchain_nonce)
+(It should be noted that two last values are not in the current version, and we need them only for calculate unspent_amount in the case then current_nonce != blockchain_nonce)
 
 Here we should consider the difficult case, namely the situation in which the server starts close/reopen procedure for the channel.
 The client doesn't need to wait (or recieve at all) confirmation from the blockchain, because it is not in the interest of the server to lie. But the server also doesn't need to wait the confirmation from the blockchain (if he makes sure that the request is mined before expiration of the channel).
@@ -41,5 +41,6 @@ In all cases we are interesting in two numbers:
 #### Difficulate case current_nonce != blockchain_nonce
 Taking into account our assumption we know that current_nonce = blockchain_nonce + 1.
 * unspent_amount = blockchain_value - oldnonce_signed_amount - current_signed_amount
+
 It should be noted that in this case server could send us smaller "oldnonce_signed_amount" (not the actually last one which was used for channelClaim). But in this case server can only make us believe that we have more money in the channel then we actually have. But only one possible attack via "unspent_amount" is actually make us believe that we have less money which we actually have and reject future calls (or force us call channelAddFunds).
 
