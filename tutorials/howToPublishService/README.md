@@ -1,12 +1,12 @@
 # Tutorial - How to Publish a Service
 
+-------------------------------
 _Before following this tutorial, make sure you've installed_
 
 * _Docker (https://www.docker.com/)_
 * _Metamask (https://metamask.io)_
 
 _You will need a private-public key pair to register your service in SNET. Generate them in Metamask before you start this turorial._
-
 -------------------------------
 
 In this tutorial we'll publish a basic service in SingularityNET using Kovan Test Network.
@@ -27,8 +27,8 @@ Step 1 may take a couple of minutes to finish. Step 2 can be performed concurren
 
 You need some AGI and ETH tokens. You can get then for free using your github account here:
 
-* AGI: http://alpha.singularitynet.io/
-* ETH: https://github.com/kovan-testnet/faucet
+* AGI: https://faucet.singularitynet.io/
+* ETH: https://faucet.kovan.network/
 
 From this point we follow the turorial in the Docker container's prompt.
 
@@ -60,7 +60,7 @@ $ snet organization create ORGANIZATION_NAME PUBLIC_KEY
 
 Replace ORGANIZATION_NAME by a name of your choice and replace PUBLIC_KEY by the public key associated with the private key you used previously.
 
-If you want to join an existing organization (e.g. SNET), ask the mantainer to add your key before proceeding.
+If you want to join an existing organization (e.g. SNET), ask the owner to add your key before proceeding.
 
 ## Step 5
 
@@ -85,7 +85,7 @@ The questions are (hopefully) self-explanatory. Defaults are safe except for:
 
 ## Step 6
 
-Create the 'service_spec' folder (or anything else you've specified in your JSON configuration file) and put the .proto file inside it
+Create the 'service_spec' folder (or anything else you've specified in your JSON configuration file) and put the .proto file inside it.
 
 In our tutorial the .proto is already in place
 
@@ -113,7 +113,7 @@ $ snet service delete ORGANIZATION_NAME SERVICE_NAME
 
 Running the service using SNET Daemon
 
-In the service folder, create a dir named 'config' and a file named 'snetd_[SERVICE_NAME]_config.json according to this template
+In the service folder, create a dir named 'config' and a file named 'snetd_[SERVICE_NAME]_config.json' according to this template
 
 ```JSON
 {
@@ -138,10 +138,22 @@ $ sh buildproto.sh
 $ python3.6 run_basic_service.py --daemon-config config/
 ```
 
-At this point your service should be up and running. You can test it by making client requests. Attach a new terminal to the Docker container and run the client request test. In a new terminal:
+At this point your service should be up and running. You can test it by making
+client requests. Open http://alpha.singularitynet.io/ in your browser or
+attach a new terminal to the Docker container and run the client request test.
+
+You can make local requests (without blockchain)
 
 ```
 $ docker exec -it `docker ps | grep login | cut -d" " -f1` /bin/bash
 $ cd /root/dnn-model-services/Services/gRPC/Basic_Template
 $ python3.6 test_call_basic_service.py
 ```
+
+Or you can make requests trought the blockchain
+
+```
+$ snet set current_agent_at YOUR_AGENT_ADDRESS
+$ snet client call add '{"a":6,"b":4}'
+```
+
