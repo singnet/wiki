@@ -1,7 +1,7 @@
 # Overview
 
 Service metadata is the off-chain descrition of SingularityNET service.
-In order use a SingularityNet service client need to know.
+In order to use a SingularityNet service client need to know.
 
 * Address of MultiPartyEscrow contract
 * Service metadata
