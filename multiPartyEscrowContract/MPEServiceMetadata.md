@@ -1,7 +1,7 @@
 # Overview
 
 Service metadata is the off-chain descrition of SingularityNET service.
-In order to start using a service client need to know.
+In order use a SingularityNet service client need to know.
 
 * Address of MultiPartyEscrow contract
 * Service metadata
@@ -50,4 +50,4 @@ There are two important security notes.
 #      endpoint - 127.0.0.1:1234 (or http://127.0.0.1:1234) - unique endpoint identifier
 ```
 
-The python library for manipulating this metadata can be found here: https://github.com/singnet/snet-cli/blob/master/snet_cli/mpe_service_metadata.: https://github.com/singnet/snet-cli/blob/master/snet_cli/mpe_service_metadata.py
+The python library for manipulating this metadata can be found here: https://github.com/singnet/snet-cli/blob/master/snet_cli/mpe_service_metadata.py
