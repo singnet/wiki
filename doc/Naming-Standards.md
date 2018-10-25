@@ -35,6 +35,6 @@ We should try to avoid this. The simplest way to avoid this in the short term is
 
 ## Service Tags
 
-Tags should follow the style of popular sites like [Stack Overflow](https://en.wikipedia.org/wiki/IDN_homograph_attack).
+Tags should follow the style of popular sites like [Stack Overflow](https://stackoverflow.com/)).
 
 These are also lowercase slugified words, e.g. `example-tag` `tags-are-great` `opencog` `artificial-neural-network` etc.
