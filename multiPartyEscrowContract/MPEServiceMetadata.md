@@ -40,7 +40,7 @@ There are two important security notes.
 #              (other pricing models can be easily supported)
 # groups[]       - group is the number of endpoints which shares same payment channel; 
 #                   grouping strategy is defined by service provider; 
-#                   for example service provider can use region name as group id
+#                   for example service provider can use region name as group name
 #      group_name - unique name of the group (human readable)
 #      group_id   - unique id of the group (random 32 byte string in base64 encoding)
 #      payment_address - Ethereum address to recieve payments
