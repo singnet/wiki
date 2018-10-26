@@ -39,7 +39,7 @@ snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e  
 snet contract  MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e balances 0x592E3C0f3B038A0D673F19a18a773F993d4b2610
 # 1000000
 
-# open the channel for the second account (for 420000 cogs), replicaID=0
+# open the channel for the second account (for 420000 cogs), groupID=0
 # Expiration is set in block numbers. 
 # You can see the last block number with the following command
 snet mpe-client block_number 
@@ -85,8 +85,8 @@ snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e c
 Here we consider low level functionality for calling services via snap-cli.
 We assume the following
 * You downloaded proto file for selected service (from IPFS metadata)
-* You opened the payment channel in MPE with a given service replica (see previous section)
-* You know the endpoint of selected replica (from IPFS metadata)
+* You opened the payment channel in MPE with a given service group (see previous section)
+* You know the endpoint of selected group (from IPFS metadata)
 
 #### Compile protobuf for service at the given payment channel
  
@@ -125,7 +125,7 @@ for example if you pass the following JSON as parameter then as "image" paramete
 
 If we remove b64encode modifier from the previous example then we will pass 1.jpeg image in binary format without base64 encoding.  
 
-###### Make a call
+###### Make a call (using low level functionality)
 
 Let's make a call to the server with the following parameters
 * 0x39ee715b50e78a920120c1ded58b1a47f571ab75 - address of MultiPartyEscrow contract
@@ -137,7 +137,7 @@ Let's make a call to the server with the following parameters
 * '{"image_type": "jpg", "file@b64encode@image": "file.jpeg"}' - JSON parameters for the server. Because of modifier we will use base64 encoded content of file.jpeg as "image" parameter 
 
 ```bash
- snet mpe-client call_server 0x39ee715b50e78a920120c1ded58b1a47f571ab75 0 1 20010 localhost:8080 classify '{"image_type": "jpg", "file@b64encode@image": "file.jpeg"}'
+ snet mpe-client call_server_lowlevel 0x39ee715b50e78a920120c1ded58b1a47f571ab75 0 1 20010 localhost:8080 classify '{"image_type": "jpg", "file@b64encode@image": "file.jpeg"}'
 ``` 
 
 
