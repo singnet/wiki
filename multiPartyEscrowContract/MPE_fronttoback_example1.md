@@ -15,8 +15,8 @@ from the client side:
 * How to make calls using MPE payment system
 
 ## Preparation 
-Please follow the following tutorial until the section "Publish example-service": 
-[Build-and-deploy-SingularityNET-locally](https://github.com/singnet/wiki/wiki/Tutorial:-Build-and-deploy-SingularityNET-locally).
+Please follow the tutorial 
+[Build-and-deploy-SingularityNET-locally](https://github.com/singnet/wiki/wiki/Tutorial:-Build-and-deploy-SingularityNET-locally) until the section "Publish example-service".
 
 We assume the following
 * You have already registered organization "ExampleOrganization"
@@ -126,6 +126,7 @@ EOF
 ```
 
 It should be noted that
+* we set fixed price 10 cogs per call
 * We set wrong private address, because this daemon will not need it 
 * We set AGENT_CONTRACT_ADDRESS, but we will not use at all
 
@@ -140,9 +141,9 @@ It should be noted that
 
 #### Open the payment channel with service provider 
 
-Open the payment channel with 
-* Ethereum address 0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB  (it is the "second" ganache address)
-* group_id 0 (it should be a random number, and we will get it from metadata.json in next version, so user will specify not a group_id, but a group_name)
+In order to open the payment channel we need to specify ethereum address and group_id of recipient:
+* Ethereum address = 0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB  (it is the "second" ganache address)
+* group_id=0 (it should be a random number, and we will get it from metadata.json in next version, so user will specify not a group_id, but a group_name)
  
 
 ```
@@ -157,8 +158,8 @@ snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e  
 # open the channel for the second account (for 420000 cogs), groupID=0
 # Expiration is set in block numbers. 
 
-# We set expiration +6000 blocks in the future (~24 hours with 15 second per block)
-EXPIRATION=$((`snet mpe-client block_number` + 6000))
+# We set expiration +12000 blocks in the future (~48 hours with 15 second per block)
+EXPIRATION=$((`snet mpe-client block_number` + 12000))
 snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e openChannel  0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB 420000 $EXPIRATION 0 --transact -y
 ```
 
@@ -172,13 +173,10 @@ We will need .proto file from the running service
 snet mpe-client compile_from_file $SINGNET_REPOS dnn-model-services/Services/gRPC/Basic_Template/service/service_spec/ basic_tamplate_rpc.proto 0
 ```
 
-
-
 #### Make a call using stateless logic
 
 We are going to make a call using stateless logic (see https://github.com/singnet/wiki/blob/master/multiPartyEscrowContract/MultiPartyEscrow_stateless_client.md).
-It means that client don't need to persist any information, except number of payment channel he want to use. In principle the client don't need to persist any data, 
-because he can get the list of open channels from blockchain log (we have special function for it). But this operation is rather slow, so the client cannot make it at each call. 
+It means that client don't need to persist any information, except number of payment channel he want to use. Client can get the list of open channels from blockchain log, or blockchain itself (we have special function for it).But this operation is rather slow, so the client cannot make it at each call. But we will be able to use this function in the case of catastrophic recovery.  
 
 First let's take from blockchain the list of open channel.
 
@@ -186,7 +184,6 @@ First let's take from blockchain the list of open channel.
 # take the list of channels from blockchain (from events!)
 snet mpe-client print_my_channels 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e
 ```
-
 We should have one channel with 0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB, and we should have 420000 cogs in it.
 
 Now we can make a call
@@ -201,7 +198,7 @@ Now we can make a call
 #parameters       = '{"a":10,"b":32}'
 snet  mpe-client call_server 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e 0 10 localhost:8080 "Addition" add '{"a":10,"b":32}'
 ```
-During this call we ask the daemon to send us the last state of the channel, and make a call using this state (see https://github.com/singnet/wiki/blob/master/multiPartyEscrowContract/MultiPartyEscrow_stateless_client.m)
+During this call we ask the daemon to send us the last state of the channel, and we make a call using this state (see https://github.com/singnet/wiki/blob/master/multiPartyEscrowContract/MultiPartyEscrow_stateless_client.md)
 
 we can repeat this call until we spend all money in the channel. None of on-chain transaction will be made!
 
