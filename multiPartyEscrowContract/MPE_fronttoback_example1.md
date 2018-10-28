@@ -177,7 +177,7 @@ snet mpe-client compile_from_file $SINGNET_REPOS dnn-model-services/Services/gRP
 #### Make a call using stateless logic
 
 We are going to make a call using stateless logic (see https://github.com/singnet/wiki/blob/master/multiPartyEscrowContract/MultiPartyEscrow_stateless_client.md).
-It means that the client don't need to persist any information, except channel_id of the payment channel which he wants to use. The client can get the list of his payment channels from blockchain log, or blockchain itself.But this operation is rather slow, so the client cannot make it at each call. But we will be able to use this function in the case of catastrophic recovery.  
+It means that the client don't need to persist any information, except channel_id of the payment channel which he wants to use. The client can get the list of his payment channels from blockchain log, or blockchain itself. But this operation is rather slow, so the client cannot make it at each call. But we will be able to use this function in the case of catastrophic recovery.  
 
 First let's take from blockchain the list of open channel.
 
