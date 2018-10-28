@@ -99,7 +99,12 @@ cd dnn-model-services/Services/gRPC/Basic_Template/
 
 # we make a link for simplicity (service is already running)
 ln -s ../../../../snet-daemon/build/snetd-linux-amd64
+
+# if it is not the first time you run thit test, and state of blockchain was reset,
+# you should reset the state of etcd storage as well
+rm -rf storage-1.etcd
 ```
+
 ###### Make configuration file for the daemon
 
 ```
