@@ -66,6 +66,7 @@ information from the Registry in the current version.
 
 ```bash
 cd $SINGNET_REPOS
+cd dnn-model-services/Services/gRPC/Basic_Template/
 
 # publish service protobuf in IPFS. It will return IPFS hash which we will use later
 snet mpe-service publish_proto service/service_spec/
