@@ -177,7 +177,7 @@ snet mpe-client compile_from_file $SINGNET_REPOS dnn-model-services/Services/gRP
 #### Make a call using stateless logic
 
 We are going to make a call using stateless logic (see https://github.com/singnet/wiki/blob/master/multiPartyEscrowContract/MultiPartyEscrow_stateless_client.md).
-It means that client don't need to persist any information, except number of payment channel he want to use. Client can get the list of open channels from blockchain log, or blockchain itself (we have special function for it).But this operation is rather slow, so the client cannot make it at each call. But we will be able to use this function in the case of catastrophic recovery.  
+It means that the client don't need to persist any information, except channel_id of the payment channel which he wants to use. The client can get the list of his payment channels from blockchain log, or blockchain itself.But this operation is rather slow, so the client cannot make it at each call. But we will be able to use this function in the case of catastrophic recovery.  
 
 First let's take from blockchain the list of open channel.
 
@@ -219,6 +219,7 @@ At the moment treasurer server logic is implemented as part of the daemon.
 cd $SINGNET_REPOS
 mkdir treasurer
 cd treasurer
+ln -s ../snet-daemon/build/snetd-linux-amd64
 
 cat > snetd.config.json << EOF
 {
@@ -236,13 +237,12 @@ cat > snetd.config.json << EOF
     }
  },
    "payment_channel_storage_server": {
-    "enabled": false,
+    "enabled": false
    }
-
 }
 EOF
 ```
-There are two important different in configuration between datamon and tresurur server
+There are two important different in configuration between daemon and tresurur server
 * In treasurer server we must provide ethereum identity (private key in this case), because treasurer 
 server will need make on-chain transaction (which is different from daemon who didn't need to send any on-chain transactions).
 * Treasurer server has "payment_chanel_storage_server.enabled=false". It means that treasurer server will not start his own etcd
