@@ -2,22 +2,21 @@
 
 Simple front to back example of using MPE payment system in
 SingularityNET with one replica configuration.
-Here we will demonstrate the following.
+
+We will demonstrate the following.
 
 from the service side:
-
 * How to publish your service (in MPE payment system)
 * How to configure your daemon(s)
-* How to claim the funds from the server side using "tresurer server"
+* How to claim the funds from the server side using "treasurer server"
 
 from the client side:
 * How to open the payment channel 
 * How to make calls using MPE payment system
 
 ## Preparation 
-Please follow the following tutorial
+Please follow the following tutorial until the section "Publish example-service": 
 [Build-and-deploy-SingularityNET-locally](https://github.com/singnet/wiki/wiki/Tutorial:-Build-and-deploy-SingularityNET-locally).
-You should follow this tutorial until "Publish example-service". 
 
 We assume the following
 * You have already registered organization "ExampleOrganization"
@@ -32,12 +31,13 @@ We also assume the following addresses:
 
 ```bash
 # Address of MultiPartyEscrow  : 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e
+# Address of Registry          : 0x8d1c8634f032d1c65c540faca15f7df83fbb9f8c
 # Address of Tokens            : 0x6e5f20669177f5bdf3703ec5ea9c4d4fe3aabd14
 # First Address (snet identity): 0x592E3C0f3B038A0D673F19a18a773F993d4b2610
 # Second Address (service)     : 0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB
 ```
 
-You will have them like this, If you started ganache with the
+In order to have such addresses you should run ganache with 
 mnemonics from tutorial: 'gauge enact
 biology destroy normal tunnel slight slide wide sauce ladder produce'.
 
@@ -59,15 +59,33 @@ python run_basic_service.py
 ```
 It will start the service at the port 7003.
 
-#### Register your service in Registry
+#### Register your service in Registry (optional step!)
 
 This step is optional for the moment, because client and daemon do not get
-information from the Registry for the moment. 
+information from the Registry in the current version. 
 
 ```bash
+cd $SINGNET_REPOS
+
+# publish service protobuf in IPFS. It will return IPFS hash which we will use later
+snet mpe-service publish_proto service/service_spec/
+#(it should retrun QmUfwZ7pEWBE5zSepKpHDaPibQxpPqoEDRo5Kzai8h5U9B)
+
+# create new service_metadata.json with mpe_address and model_ipfs_hash
+snet mpe-service  metadata_init QmUfwZ7pEWBE5zSepKpHDaPibQxpPqoEDRo5Kzai8h5U9B 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e
+
+# add new group with name group1 to service_metadata.json
+snet mpe-service metadata_add_group group1 0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB
+
+# add endpoint localhost:8080 to group1 in service_metadata.json
+snet mpe-service metadata_add_endpoints group1 localhost:8080
+
+# publish service in Registry
+snet mpe-service  publish_service 0x8d1c8634f032d1c65c540faca15f7df83fbb9f8c ExampleOrganization Basic_Template -y
 ```
 
-#### Configure and start your daemom 
+
+#### Configure and start your daemon 
 
 ###### Preparation
 ```
@@ -93,10 +111,10 @@ cat > snetd.config.json << EOF
     "MULTI_PARTY_ESCROW_CONTRACT_ADDRESS": "0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e",
     "PRIVATE_KEY": "1000000000000000000000000000000000000000000000000000000000000000",
     "DAEMON_LISTENING_PORT": 8080,
-    "DB_PATH": "./db",
     "ETHEREUM_JSON_RPC_ENDPOINT": "http://localhost:8545",
     "PASSTHROUGH_ENABLED": true,
     "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
+    "price_per_call": 10,
 "log": {
     "level": "debug",
     "output": {
@@ -144,9 +162,9 @@ EXPIRATION=$((`snet mpe-client block_number` + 6000))
 snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e openChannel  0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB 420000 $EXPIRATION 0 --transact -y
 ```
 
-#### Compile protobuf (temporaly section!)
+#### Compile protobuf (temporally section!)
 
-In the future version, we will take the protobuf from metadata and compile it automatically. But it is not supported yet, so we will do it manualy.
+In the future version, we will take the protobuf from metadata and compile it automatically. But it is not supported yet, so we will do it manually.
 We will need .proto file from the running service
 
 ```
@@ -181,29 +199,79 @@ Now we can make a call
 #protobuf_service = Addition
 #protobuf_method  = add
 #parameters       = '{"a":10,"b":32}'
-
-snet  mpe-client call_server_lowlevel 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e 1 4 200 localhost:8080 "Addition" add '{"a":10,"b":32}'
+snet  mpe-client call_server 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e 0 10 localhost:8080 "Addition" add '{"a":10,"b":32}'
 ```
 During this call we ask the daemon to send us the last state of the channel, and make a call using this state (see https://github.com/singnet/wiki/blob/master/multiPartyEscrowContract/MultiPartyEscrow_stateless_client.m)
 
-we can repeat this call until we spend all money in the channel
+we can repeat this call until we spend all money in the channel. None of on-chain transaction will be made!
 
 ```
-snet  mpe-client call_server_lowlevel 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e 1 4 200 localhost:8080 "Addition" add '{"a":1000,"b":3332}'
-snet  mpe-client call_server_lowlevel 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e 1 4 200 localhost:8080 "Addition" add '{"a":567,"b":1234}'
 #....
+snet  mpe-client call_server 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e 0 10 localhost:8080 "Addition" add '{"a":10,"b":32}'
+snet  mpe-client call_server 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e 0 10 localhost:8080 "Addition" add '{"a":10,"b":32}'
 ```
 
 ## Claim channel by treasurer server
 
-At the moment tresurer server logic is implemented as part of the daemon. 
+At the moment treasurer server logic is implemented as part of the daemon. 
 
-#### Configure tresurer 
+#### Configure treasurer 
 
 ```
 cd $SINGNET_REPOS
 mkdir treasurer
 cd treasurer
+
+cat > snetd.config.json << EOF
+{
+    "AGENT_CONTRACT_ADDRESS": "0x3b07411493C72c5aEC01b6Cf3cd0981cF0586fA7",
+    "MULTI_PARTY_ESCROW_CONTRACT_ADDRESS": "0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e",
+    "PRIVATE_KEY": "04899d5fd471ce68f84a5ec64e2e4b6b045d8b850599a57f5b307024be01f262",
+    "DAEMON_LISTENING_PORT": 8080,
+    "ETHEREUM_JSON_RPC_ENDPOINT": "http://localhost:8545",
+    "PASSTHROUGH_ENABLED": true,
+    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
+"log": {
+    "level": "debug",
+    "output": {
+    "type": "stdout"
+    }
+ },
+   "payment_channel_storage_server": {
+    "enabled": false,
+   }
+
+}
+EOF
+```
+There are two important different in configuration between datamon and tresurur server
+* In treasurer server we must provide ethereum identity (private key in this case), because treasurer 
+server will need make on-chain transaction (daemon didn't need to send on-chain transaction).
+* Treasurer server has "payment_chanel_storage_server.enabled=false". It means that treasurer server will not start his own etcd
+storage, but instead it will connect to etcd storage of daemon.
+
+
+Now we can ask treasurer to claim funds from the channel (close/reopen logic).
+Let's check the on-chain state of the channel before and after claim the funds.
+
+```bash
+# check on chain state of the channel
+snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e channels 0
+# 
+
+
+# claim funds from the channel 0
+./snetd-linux-amd64 claim --channel-id 0
+
+
+# check the on chain state of the channel 0 (nonce should be 1 now)
+snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e channels 0
+
+```
+the following logic happend during the run of treasurer server.
+* treasurer server ask etcd to send the last stated of the channel, and increment the nonce of the channel.
+* daemon(s) can continue to work with the client without any confirmation from the treasurer or block-chain.
+* treasurer send on-chain transaction to claim funds and increase the nonce of the channel (close/reopen channel)
 
 
 
