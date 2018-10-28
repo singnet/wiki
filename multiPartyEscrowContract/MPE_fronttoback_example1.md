@@ -243,7 +243,7 @@ EOF
 ```
 There are two important different in configuration between datamon and tresurur server
 * In treasurer server we must provide ethereum identity (private key in this case), because treasurer 
-server will need make on-chain transaction (daemon didn't need to send on-chain transaction).
+server will need make on-chain transaction (which is different from daemon who didn't need to send any on-chain transactions).
 * Treasurer server has "payment_chanel_storage_server.enabled=false". It means that treasurer server will not start his own etcd
 storage, but instead it will connect to etcd storage of daemon.
 
@@ -263,13 +263,9 @@ snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e c
 
 # check the on chain state of the channel 0 (nonce should be 1 now)
 snet contract MultiPartyEscrow --at 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e channels 0
-
 ```
+
 the following logic happend during the run of treasurer server.
 * treasurer server ask etcd to send the last stated of the channel, and increment the nonce of the channel.
 * daemon(s) can continue to work with the client without any confirmation from the treasurer or block-chain.
 * treasurer send on-chain transaction to claim funds and increase the nonce of the channel (close/reopen channel)
-
-
-
-
