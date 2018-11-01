@@ -14,6 +14,8 @@ _You will need a private-public key pair to register your service in SNET. Gener
 Run this tutorial from a bash terminal in this git repository folder. For more
 details regarding C++ gRPC see https://grpc.io/docs/
 
+In this tutorial we'll create a C++ gRPC service and publish it in SingularityNET.
+
 ## Step 1 
 
 Setup and run a docker container. We'll install C++ gRPC stuff in a container
@@ -30,7 +32,7 @@ If you want to install C++ gRPC in your workstation, look for the section "C++ g
 
 In this tutorial we'll develop our service inside the docker container.
 
-```
+```SH
 $ ./setupContainer.sh
 ```
 
@@ -40,7 +42,7 @@ From this point we follow the turorial in the Docker container's prompt.
 
 Create the skeleton structure for your service's project
 
-```
+```SH
 $ ./create_project.sh PROJECT_NAME SERVICE_NAME SERVICE_PORT
 ```
 
@@ -106,18 +108,20 @@ understand everything you can do in the `.proto` file.
 
 ## Step 4
 
+In order to actually implement our API we need to edit `src/server.cc`.
+
 Look for `PROTO_TYPES` and replace the `using` statements to reflect our data
 types defined in the last step.
 
-```
+```C++
 using tutorial::ServiceDefinition;
 using tutorial::IntPair;
 using tutorial::SingleInt;
 using tutorial::SingleString;
 ```
 
-In order to actually implement our API we need to edit `src/server.cc`. Look
-for `SERVICE_API` and replace `doSomething()` by our actual API methods:
+
+Now look for `SERVICE_API` and replace `doSomething()` by our actual API methods:
 
 ```C++
 Status div(ServerContext* context, const IntPair* input, SingleInt* output) override {
@@ -137,12 +141,12 @@ Status check(ServerContext* context, const SingleInt* input, SingleString* outpu
 ## Step 5
 
 Now we'll write a client to test our server locally (without using the
-blockchain). Edit src/client.cc.
+blockchain). Edit `src/client.cc`.
 
 Look for `PROTO_TYPES` and replace the `using` statements to reflect our data
 types defined in the last step.
 
-```
+```C++
 using tutorial::ServiceDefinition;
 using tutorial::IntPair;
 using tutorial::SingleInt;
@@ -153,8 +157,7 @@ Now look for `TEST_CODE` and Replace `doSomething()` implementation by our
 testing code:
 
 
-```
-
+```C++
 void doSomething(int argc, char** argv) {
 
     int n1 = atoi(argv[1]);
@@ -186,15 +189,13 @@ void doSomething(int argc, char** argv) {
         std::cout << "doSomething rpc failed." << std::endl;
     }
 }
-
-
 ```
 
 ## Step 6
 
 To build the service:
 
-```
+```SH
 $ cd src
 $ make
 $ cd ..
@@ -206,13 +207,167 @@ At this point you should have `server` and `client` in `bin/`
 
 To test our server locally (without using the blockchain)
 
-```
+```SH
 $ ./bin/server &
 $ ./bin/client 12 4
 ```
 
-You should see the following output:
+You should have something like the following output:
 
 ```
+root@1eee79873d63:~/install/tutorial# ./bin/server &
+[1] 4217
+root@1eee79873d63:~/install/tutorial# Server listening on 0.0.0.0:70468
+./bin/client 12 4
+3
+```
 
+At this point you have successfully built a gRPC C++ service. The executables
+in `bin/` can be used from anywhere inside the container (they don't need
+anything from the installation directory) or outside the container if you have
+C++ gRPC libraries installed.
+
+The next steps in this tutorial will publish the service in SingularityNET.
+
+## Step 8 (optional if you already have enough AGI and ETH tokens)
+
+You need some AGI and ETH tokens. You can get then for free (using your github
+account) here:
+
+* AGI: https://faucet.singularitynet.io/
+* ETH: https://faucet.kovan.network/
+
+## Step 9
+
+Create an "alias" for your private key.
+
+```SH
+$ snet identity create MY_ID_NAME KEY_TYPE
+```
+
+Replace `MY_ID_NAME` by an id to identify your key in the `SNET-CLI`. This id
+will not be seen by anyone. It's just a way to make it easier for you to refer
+to your private key (you may have many, btw) in following 'snet' commands. This
+alias is kept locally in the container and will vanish when it's shutdown.
+`KEY_TYPE` can be either
+
+* key
+* rpc
+* mnemonic
+* ledger
+* trezor
+
+You may find detailed information regarding key types (and other `SNET-CLI`
+features) in https://github.com/singnet/snet-cli
+
+In this tutorial we'll use `KEY_TYPE == key`. Enter your private key when prompted.
+
+## Step 10 (optional if you already have an organization) 
+
+Create an organization and add your key to it.
+
+```SH
+$ snet organization create ORGANIZATION_NAME PUBLIC_KEY
+```
+
+Replace `ORGANIZATION_NAME` by a name of your choice and replace `PUBLIC_KEY`
+by the public key associated with the private key you used previously.
+
+If you want to join an existing organization (e.g. SNET), ask the owner to add
+your key before proceeding.
+
+## Setp 11
+
+Edit a JSON configuration file for your service.  We already have a valid
+`service.json` in prject's folder looking like this:
+
+```JSON
+{
+    "name": "math-operations",
+    "service_spec": "src/service_spec",
+    "organization": "SNET",
+    "path": "",
+    "price": 0,
+    "endpoint": "http://localhost:70468",
+    "tags": [
+        "[]"
+    ],
+    "metadata": {
+        "description": ""
+    }
+}
+``` 
+
+Anyway we'll change it to add some useful information in `tags` and `description`.
+
+```JSON
+{
+    "name": "math-operations",
+    "service_spec": "src/service_spec",
+    "organization": "SNET",
+    "path": "",
+    "price": 0,
+    "endpoint": "http://localhost:70468",
+    "tags": ["tutorial", "math-operations", "basic"],
+    "metadata": {
+        "description": "A tutorial C++ service"
+    }
+}
+``` 
+
+You could also use `SNET-CLI` build the JSON configuration file
+using `snet service init` and answering the prompted questions.
+
+## Step 12
+
+Publish and start your service
+
+```SH
+$ ./publishAndStartService.sh PRIVATE_KEY
+```
+
+Replace `PRIVATE_KEY` by your wallet's private key (in `Metamask`: menu ->
+details -> export private key).  This will start the SNET Daemon and your
+service. If everything goes well you will see the blockchain trasaction logs
+and then the following 3 messages (respectively from: SNET-CLI, your service and
+SNET Daemon):
+
+```
+Service published!
+Server listening on 0.0.0.0:70468
+DEBU[0001] starting daemon                              
+```
+
+You can double check if it has been properly published using
+
+```
+$ snet organization list-services SNET
+```
+
+Optionally you can un-publish the service
+
+```
+$ snet service delete ORGANIZATION_NAME SERVICE_NAME
+```
+
+Actually, since this is just a tutorial, you are expected to un-publish your
+service as soon as you finish the tests.
+
+Other `snet` commands and options (as well as their documentation) can be found here: 
+https://github.com/singnet/snet-cli
+
+## Step 13
+
+You can test your service making requests in command line
+
+```
+AQUI: criar um script para nao ter que passar o YOUR_AGENT_ADDRESS e abstrair a jason syntax abaixo.
+$ snet set current_agent_at YOUR_AGENT_ADDRESS
+$ snet client call add '{"a":6,"b":4}'
+```
+
+That's it. Remember to delete your service as explained in Step 12.
+
+```
+$ snet service delete SNET math-operations
 ```

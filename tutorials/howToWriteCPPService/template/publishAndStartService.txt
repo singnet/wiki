@@ -1,0 +1,9 @@
+#!/bin/sh
+
+TMP_FILE=/tmp/__log.txt
+yes | snet service publish | tee $TMP_FILE
+#cat /tmp/x | tee $TMP_FILE
+./bin/server &
+sed -i "s/__AGENT_ADDRESS__/$(cat $TMP_FILE | grep current_agent_at | cut -d" " -f3)/g" __DAEMON_CONFIG_FILE__
+sed -i "s/__PRIVATE_KEY__/$1/g" __DAEMON_CONFIG_FILE__
+snetd --config __DAEMON_CONFIG_FILE__ &
