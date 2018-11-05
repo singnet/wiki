@@ -361,9 +361,8 @@ https://github.com/singnet/snet-cli
 You can test your service making requests in command line
 
 ```
-AQUI: criar um script para nao ter que passar o YOUR_AGENT_ADDRESS e abstrair a jason syntax abaixo.
-$ snet set current_agent_at YOUR_AGENT_ADDRESS
-$ snet client call add '{"a":6,"b":4}'
+$ ./testServiceRequest.sh 12 4
+3
 ```
 
 That's it. Remember to delete your service as explained in Step 12.
