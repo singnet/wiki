@@ -7,4 +7,4 @@
 # Prints A / B
 
 snet set current_agent_at __AGENT_ADDRESS__
-snet client call add "{\"a\":$1,\"b\":$2}"
+snet client call div "{\"a\":$1,\"b\":$2}"

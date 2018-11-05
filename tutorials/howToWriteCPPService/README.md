@@ -260,7 +260,8 @@ alias is kept locally in the container and will vanish when it's shutdown.
 You may find detailed information regarding key types (and other `SNET-CLI`
 features) in https://github.com/singnet/snet-cli
 
-In this tutorial we'll use `KEY_TYPE == key`. Enter your private key when prompted.
+In this tutorial we'll use `KEY_TYPE == key`. Enter your private key when
+prompted (in `Metamask`: menu -> details -> export private key)
 
 ## Step 10 (optional if you already have an organization) 
 
@@ -279,7 +280,7 @@ your key before proceeding.
 ## Setp 11
 
 Edit a JSON configuration file for your service.  We already have a valid
-`service.json` in prject's folder looking like this:
+`service.json` in project's folder looking like this:
 
 ```JSON
 {
@@ -320,7 +321,8 @@ using `snet service init` and answering the prompted questions.
 
 ## Step 12
 
-Publish and start your service
+First, make sure you killed the `server` proccess started in Step 7. Then
+publish and start your service:
 
 ```SH
 $ ./publishAndStartService.sh PRIVATE_KEY
