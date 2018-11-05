@@ -64,7 +64,7 @@ In this tutorial we'll implement a service with two methods:
 So we'll use this command line to create project's skeleton
 
 ```SH
-$ ./create_project.sh tutorial math-operations 70468
+$ ./create_project.sh tutorial math-operations 7070
 $ cd tutorial
 ```
 
@@ -76,10 +76,16 @@ We need to edit `src/service_spec/tutorial.proto` and define
 * the data structures used to carry input and output of the methods, and
 * the RPC API of the service.
 
-`src/service_spec/tutorial.proto` have two sections we are interested in. First, let's define
-the messages, which are the data structures used as input and output of the RPC methods.
+Take a look at https://developers.google.com/protocol-buffers/docs/overview to
+understand everything you can do in the `.proto` file.
+
+In this tutorial our `src/service_spec/tutorial.proto` will be like this:
 
 ```Java
+syntax = "proto3";
+
+package tutorial;
+
 message IntPair {
     int32 a = 1;
     int32 b = 2;
@@ -92,19 +98,15 @@ message SingleInt {
 message SingleString {
     string s = 1;
 }
-```
 
-Now we define the API:
-
-```C++
 service ServiceDefinition {
     rpc div(IntPair) returns (SingleInt) {}
     rpc check(SingleInt) returns (SingleString) {}
 }
 ```
 
-Take a look at https://developers.google.com/protocol-buffers/docs/overview to
-understand everything you can do in the `.proto` file.
+Each `message` statement define a data structure used either as input or output
+in the API. The `service` statement defines the RPC API itself.
 
 ## Step 4
 
@@ -119,7 +121,6 @@ using tutorial::IntPair;
 using tutorial::SingleInt;
 using tutorial::SingleString;
 ```
-
 
 Now look for `SERVICE_API` and replace `doSomething()` by our actual API methods:
 
@@ -144,7 +145,7 @@ Now we'll write a client to test our server locally (without using the
 blockchain). Edit `src/client.cc`.
 
 Look for `PROTO_TYPES` and replace the `using` statements to reflect our data
-types defined in the last step.
+types defined in Step 3.
 
 ```C++
 using tutorial::ServiceDefinition;
@@ -196,9 +197,7 @@ void doSomething(int argc, char** argv) {
 To build the service:
 
 ```SH
-$ cd src
-$ make
-$ cd ..
+$ ./build.sh
 ```
 
 At this point you should have `server` and `client` in `bin/`
@@ -217,7 +216,7 @@ You should have something like the following output:
 ```
 root@1eee79873d63:~/install/tutorial# ./bin/server &
 [1] 4217
-root@1eee79873d63:~/install/tutorial# Server listening on 0.0.0.0:70468
+root@1eee79873d63:~/install/tutorial# Server listening on 0.0.0.0:7070
 ./bin/client 12 4
 3
 ```
@@ -289,7 +288,7 @@ Edit a JSON configuration file for your service.  We already have a valid
     "organization": "SNET",
     "path": "",
     "price": 0,
-    "endpoint": "http://localhost:70468",
+    "endpoint": "http://localhost:7070",
     "tags": [
         "[]"
     ],
@@ -308,7 +307,7 @@ Anyway we'll change it to add some useful information in `tags` and `description
     "organization": "SNET",
     "path": "",
     "price": 0,
-    "endpoint": "http://localhost:70468",
+    "endpoint": "http://localhost:7070",
     "tags": ["tutorial", "math-operations", "basic"],
     "metadata": {
         "description": "A tutorial C++ service"
@@ -328,7 +327,7 @@ publish and start your service:
 $ ./publishAndStartService.sh PRIVATE_KEY
 ```
 
-Replace `PRIVATE_KEY` by your wallet's private key (in `Metamask`: menu ->
+Replace `PRIVATE_KEY` by your private key (in `Metamask`: menu ->
 details -> export private key).  This will start the SNET Daemon and your
 service. If everything goes well you will see the blockchain trasaction logs
 and then the following 3 messages (respectively from: SNET-CLI, your service and
@@ -336,7 +335,7 @@ SNET Daemon):
 
 ```
 Service published!
-Server listening on 0.0.0.0:70468
+Server listening on 0.0.0.0:7070
 DEBU[0001] starting daemon                              
 ```
 
@@ -364,11 +363,13 @@ You can test your service making requests in command line
 
 ```
 $ ./testServiceRequest.sh 12 4
-3
+[blockchain log]
+    response:
+        v: 3
 ```
 
 That's it. Remember to delete your service as explained in Step 12.
 
 ```
-$ snet service delete SNET math-operations
+$ snet service delete -y SNET math-operations
 ```

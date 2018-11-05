@@ -4,7 +4,7 @@
     "organization": "SNET",
     "path": "",
     "price": 0,
-    "endpoint": "http://localhost:__SERVICE_PORT__",
+    "endpoint": "http://localhost:7000",
     "tags": [
         "[]"
     ],
