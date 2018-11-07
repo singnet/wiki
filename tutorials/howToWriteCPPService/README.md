@@ -274,7 +274,7 @@ Replace `ORGANIZATION_NAME` by a name of your choice and replace `PUBLIC_KEY`
 by the public key associated with the private key you used previously.
 
 If you want to join an existing organization (e.g. SNET), ask the owner to add
-your key before proceeding.
+your key before proceeding. In this tutorial we assume you'll use SNET.
 
 ## Setp 11
 
@@ -348,7 +348,7 @@ $ snet organization list-services SNET
 Optionally you can un-publish the service
 
 ```
-$ snet service delete ORGANIZATION_NAME SERVICE_NAME
+$ snet service delete SNET math-operations
 ```
 
 Actually, since this is just a tutorial, you are expected to un-publish your
