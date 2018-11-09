@@ -26,15 +26,20 @@ There are two important security notes.
 
 
 ```bash
-# version         - used to track format changes (current version is 1)
+# version          - used to track format changes (current version is 1)
 # display_name     - Display name of the service
 # encoding         - Service encoding (json or grpc)
-# model_ipfs_hash - IPFS HASH to the .tar archive of protobuf service specification
-# mpe_address     - Address of MultiPartyEscrow contract. 
-#                   Client should use it exclusively for cross-checking of mpe_address, 
-#                        (because service can attack via mpe_address)
-#                   Daemon can use it directly if authenticity of metadata is confirmed
-# pricing {}      - Pricing model
+# service_type     - Service type (grpc, jsonrpc or process)  
+# payment_expiration_threshold - Service will reject payments with expiration less
+#                                than current_block + payment_expiration_threshold.
+#                                This field should be used by the client with caution.
+#                                Client should not accept arbitrary payment_expiration_threshold
+# model_ipfs_hash  - IPFS HASH to the .tar archive of protobuf service specification
+# mpe_address      - Address of MultiPartyEscrow contract. 
+#                    Client should use it exclusively for cross-checking of mpe_address, 
+#                         (because service can attack via mpe_address)
+#                    Daemon can use it directly if authenticity of metadata is confirmed
+# pricing {}      -  Pricing model
 #          Possible pricing models:
 #          1. Fixed price
 #              price_model  - "fixed_price"
