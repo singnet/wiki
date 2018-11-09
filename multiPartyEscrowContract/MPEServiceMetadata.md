@@ -27,6 +27,8 @@ There are two important security notes.
 
 ```bash
 # version         - used to track format changes (current version is 1)
+# display_name     - Display name of the service
+# encoding         - Service encoding (json or grpc)
 # model_ipfs_hash - IPFS HASH to the .tar archive of protobuf service specification
 # mpe_address     - Address of MultiPartyEscrow contract. 
 #                   Client should use it exclusively for cross-checking of mpe_address, 
