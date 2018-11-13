@@ -17,11 +17,11 @@ In this tutorial we'll publish a basic service in SingularityNET using Kovan Tes
 
 ## Step 1 
 
-Setup a `ubuntu:18.04` docker container using a provided `Dockerfile`.
+Setup a `ubuntu:18.04` docker container using provided `Dockerfile`.
 
 ```
-$ docker build --build-arg daemon_port=7000 -t snet_service https://github.com/arturgontijo/wiki.git#tutorial_cpp_service:/tutorials/Docker
-$ docker run -ti snet_service bash
+$ docker build -t snet_service https://github.com/arturgontijo/wiki.git#tutorial_cpp_service:/tutorials/Docker
+$ docker run -p 7000:7000 -ti snet_service bash
 ```
 
 Step 1 may take a couple of minutes to finish. Step 2 can be performed concurrently.
@@ -33,14 +33,14 @@ You need some AGI and ETH tokens. You can get then for free using your github ac
 * AGI: https://faucet.singularitynet.io/
 * ETH: https://faucet.kovan.network/
 
-From this point we follow the turorial in the Docker container's prompt.
-
 ## Step 3 
+
+From this point we follow the turorial in the Docker container's prompt.
 
 Create an "alias" for your private key.
 
 ```
-$ snet identity create MY_ID_NAME KEY_TYPE
+# snet identity create MY_ID_NAME KEY_TYPE
 ```
 
 Replace MY_ID_NAME by an id to identify your key in the SNET-CLI. This id will not be seen by anyone. It's just a way to make it easier for you to refer to your private key (you may have many, btw) in following 'snet' commands. This alias is kept locally in the container and will vanish when it's shutdown. KEY_TYPE can be either
@@ -58,27 +58,27 @@ In this tutorial we'll use KEY_TYPE == key. Enter your private key when prompted
 Create an organization and add your key to it.
 
 ```
-$ snet organization create ORGANIZATION_NAME PUBLIC_KEY
+# snet organization create ORGANIZATION_NAME
 ```
 
-Replace ORGANIZATION_NAME by a name of your choice and replace PUBLIC_KEY by the public key associated with the private key you used previously.
+Replace ORGANIZATION_NAME by a name of your choice.
 
-If you want to join an existing organization (e.g. SNET), ask the owner to add your key before proceeding.
+If you want to join an existing organization (e.g. SNET), ask the owner to add your public key into it before proceeding.
 
 ## Step 5
 
 Build a JSON configuration file for your service.
 
-In this tutorial we use a simple service implemented in https://github.com/singnet/dnn-model-services.git
+In this tutorial we use a simple service implemented in [DNN Model Services](https://github.com/singnet/dnn-model-services.git).
 
 ```
-$ git clone https://github.com/singnet/dnn-model-services.git
-$ cd dnn-model-services/Services/gRPC/Basic_Template/service/
+# git clone https://github.com/singnet/dnn-model-services.git
+# cd dnn-model-services/Services/gRPC/Basic_Template/service/
 ```
 To build the JSON configuration file, execute the following command and enter the requested information.
 
 ```
-$ snet service init
+# snet service init
 ```
 
 The questions are (hopefully) self-explanatory. Defaults are safe except for:
@@ -97,19 +97,19 @@ In our tutorial the .proto is already in place
 Publish your service
 
 ```
-$ snet service publish
+# snet service publish
 ```
 
 Check if it has been properly published
 
 ```
-$ snet organization list-services ORGANIZATION_NAME
+# snet organization list-services ORGANIZATION_NAME
 ```
 
 Optionally you can un-publish the service
 
 ```
-$ snet service delete ORGANIZATION_NAME SERVICE_NAME
+# snet service delete ORGANIZATION_NAME SERVICE_NAME
 ```
 
 ## Step 8
@@ -134,29 +134,34 @@ In the service folder, create a dir named 'config' and a file named 'snetd_[SERV
 ```
 
 ```
-$ cd ..
-$ mkdir config
-$ vi config/snetd_[SERVICE_NAME]_config.json
-$ sh buildproto.sh
-$ python3.6 run_basic_service.py --daemon-config config/
+# cd ..
+# mkdir config
+# vi config/snetd_[SERVICE_NAME]_config.json
+# sh buildproto.sh
+# python3.6 run_basic_service.py --daemon-config config/
 ```
 
 At this point your service should be up and running. You can test it by making
-client requests. Open http://alpha.singularitynet.io/ in your browser or
+client requests. Open [SingularityNET DApp](http://alpha.singularitynet.io/) in your browser or
 attach a new terminal to the Docker container and run the client request test.
 
-You can make local requests (without blockchain)
+You can make local requests (testing purpose)
 
 ```
-$ docker exec -it `docker ps | grep login | cut -d" " -f1` /bin/bash
-$ cd /root/dnn-model-services/Services/gRPC/Basic_Template
-$ python3.6 test_call_basic_service.py
+$ docker exec -it snet_service bash
 ```
 
-Or you can make requests trought the blockchain
+Inside the Docker container:
 
 ```
-$ snet set current_agent_at YOUR_AGENT_ADDRESS
-$ snet client call add '{"a":6,"b":4}'
+# cd /root/dnn-model-services/Services/gRPC/Basic_Template
+# python3.6 test_call_basic_service.py
+```
+
+Or you can make requests trough SingularityNET
+
+```
+# snet set current_agent_at YOUR_AGENT_ADDRESS
+# snet client call add '{"a":6,"b":4}'
 ```
 

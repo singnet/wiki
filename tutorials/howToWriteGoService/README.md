@@ -19,11 +19,11 @@ In this tutorial we'll create a Go service and publish it in SingularityNET.
 
 ## Step 1 
 
-Setup a `ubuntu:18.04` docker container using a provided `Dockerfile`.
+Setup a `ubuntu:18.04` docker container using provided `Dockerfile`.
 
 ```
-$ docker build --build-arg language=go --build-arg daemon_port=7000 -t snet_go_service https://github.com/arturgontijo/wiki.git#tutorial_cpp_service:/tutorials/Docker
-$ docker run -ti snet_go_service bash
+$ docker build --build-arg language=go -t snet_go_service https://github.com/arturgontijo/wiki.git#tutorial_cpp_service:/tutorials/Docker
+$ docker run -p 7000:7000 -ti snet_go_service bash
 ```
 
 From this point we follow the turorial in the Docker container's prompt.

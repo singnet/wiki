@@ -19,11 +19,11 @@ In this tutorial we'll create a Python service and publish it in SingularityNET.
 
 ## Step 1 
 
-Setup a `ubuntu:18.04` docker container using a provided `Dockerfile`.
+Setup a `ubuntu:18.04` docker container using provided `Dockerfile`.
 
 ```
-$ docker build --build-arg language=python --build-arg daemon_port=7000 -t snet_python_service https://github.com/arturgontijo/wiki.git#tutorial_cpp_service:/tutorials/Docker
-$ docker run -ti snet_python_service bash
+$ docker build --build-arg language=python -t snet_python_service https://github.com/arturgontijo/wiki.git#tutorial_cpp_service:/tutorials/Docker
+$ docker run -p 7000:7000 -ti snet_python_service bash
 ```
 
 From this point we follow the turorial in the Docker container's prompt.

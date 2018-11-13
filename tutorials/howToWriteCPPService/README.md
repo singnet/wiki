@@ -33,11 +33,11 @@ If you want to install C++ gRPC in your workstation, look for the section "C++ g
 
 In this tutorial we'll develop our service inside the docker container.
 
-Setup a `ubuntu:18.04` docker container using a provided `Dockerfile`.
+Setup a `ubuntu:18.04` docker container using provided `Dockerfile`.
 
 ```
-$ docker build --build-arg language=cpp --build-arg daemon_port=7000 -t snet_cpp_service https://github.com/arturgontijo/wiki.git#tutorial_cpp_service:/tutorials/Docker
-$ docker run -ti snet_cpp_service bash
+$ docker build --build-arg language=cpp -t snet_cpp_service https://github.com/arturgontijo/wiki.git#tutorial_cpp_service:/tutorials/Docker
+$ docker run -p 7000:7000 -ti snet_cpp_service bash
 ```
 
 From this point we follow the turorial in the Docker container's prompt.

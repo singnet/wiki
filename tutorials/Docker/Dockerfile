@@ -1,7 +1,6 @@
 FROM ubuntu:18.04
 
 ARG language
-ARG daemon_port
 
 ENV SINGNET_REPOS=/opt/singnet
 ENV GOPATH=${SINGNET_REPOS}/go
@@ -65,5 +64,3 @@ RUN if [ "$language" = "go" ]; \
     fi
 
 WORKDIR ${SINGNET_REPOS}
-
-EXPOSE ${daemon_port}
