@@ -326,8 +326,4 @@ That's it. Remember to delete your service as explained in Step 12.
 
 ```
 # snet service delete -y SNET math-operations
-<<<<<<< HEAD
 ```
-=======
-```
->>>>>>> 318c70974cf520c3937f777c1e2f92820f9604d4
