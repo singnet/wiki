@@ -1,4 +1,4 @@
-# Tutorial - How to Publish a Service
+# Tutorial - How to Publish a SingularityNET Service
 
 -------------------------------
 
@@ -11,16 +11,17 @@ _You will need a private-public key pair to register your service in SNET. Gener
 
 -------------------------------
 
-In this tutorial we'll publish a basic service in SingularityNET using Kovan Test Network.
+Run this tutorial from a bash terminal.
 
-Run this tutorial from a bash terminal in this git repository folder.
+In this tutorial we'll publish a basic service in SingularityNET using Kovan Test Network.
 
 ## Step 1 
 
-We start with a basic docker container where we add all the required packages. We'll use this container to actually publish our service.
+Setup a `ubuntu:18.04` docker container using a provided `Dockerfile`.
 
 ```
-$ ./setupContainer.sh
+$ docker build --build-arg daemon_port=7000 -t snet_service https://github.com/arturgontijo/wiki.git#tutorial_cpp_service:/tutorials/Docker
+$ docker run -ti snet_service bash
 ```
 
 Step 1 may take a couple of minutes to finish. Step 2 can be performed concurrently.
@@ -126,7 +127,7 @@ In the service folder, create a dir named 'config' and a file named 'snetd_[SERV
     "AGENT_CONTRACT_ADDRESS": "YOUR_AGENT_ADDRESS",
     "SERVICE_TYPE": "grpc",
     "PASSTHROUGH_ENABLED": true,
-    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
+    "PASSTHROUGH_ENDPOINT": "http://localhost:7000",
     "LOG_LEVEL": 10,
     "PRIVATE_KEY": "YOUR_PRIVATE_KEY"
 }
