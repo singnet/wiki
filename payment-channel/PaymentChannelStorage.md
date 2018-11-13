@@ -157,10 +157,9 @@ For example:
 |------------|----------------|----------------|-------------------------|------------------------|
 |  replica 1 |             yes|          node1 | http://AAA.BBB.1.1:2379 | http://AAA.BBB.1.1:2380|
 |  replica 2 |             yes|          node2 | http://AAA.BBB.1.2:2379 | http://AAA.BBB.1.2:2380|
-|  replica 3 |             yes|          node3 | http://AAA.BBB.1.3:2379 | http://AAA.BBB.1.3:2380|
 |  replica 3 |              no|
-|  replica 3 |              no|
-|  replica 3 |              no|
+|  replica 4 |             yes|          node3 | http://AAA.BBB.1.4:2379 | http://AAA.BBB.1.4:2380|
+|  replica 5 |              no|
 
 Such configuration requires that all replicas which maintain an etcd node needs to be started first
 to have functional etcd cluster.
