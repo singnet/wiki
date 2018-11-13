@@ -61,14 +61,14 @@ Lets strike out the availability guarantee and leave only partition tolerance an
 
 The new design now looks like:
 
-![several replicas with several independent storages](img/payment_channel_storage_several_replicas_separate_etcd_cluster.jpg)
+![several replicas with several independent storages](img/payment_channel_storage_several_replicas_separate_distributed_storage.jpg)
 
 The current approach is fine but it requires for a service owner not only setup an snet-daemon for each replica 
 but also to deploy a separated distributed storage. This can be rather tedious and complicated task.
 To avoid this it would be good to incorporate the distributed storage nodes into snet-daemons so it would be the
 snet-daemon task to run required distributed storage nodes:
 
-![several replicas with several independent storages](img/payment_channel_storage_several_replicas_embedded_etcd_cluster.jpg)
+![several replicas with several independent storages](img/payment_channel_storage_several_replicas_embedded_distributed_storage.jpg)
 
 ## Considered storages
 
