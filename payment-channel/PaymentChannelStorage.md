@@ -9,10 +9,10 @@ If there is only one service and corresponding snet-daemon the process is easy:
 
 ![one replica](img/payment_channel_storage_single_replica.jpg)
 
-if payment is passes a validation process the payment channel is stored in an internal storage
-to be claimed after the service successfully accomplished the request. 
+if payment passes a validation process the payment channel is stored in an internal storage
+to be claimed when the service successfully accomplishes the request.
 
-The situation becomes more difficult if a service provides several replicas.
+The situation becomes more complicated if a service provides several replicas.
 In this case it is not possible just to have several separated snet-daemons each of which has an independent
 internal storage. 
 
@@ -20,37 +20,36 @@ internal storage.
 
 One drawback of using a separated payment channel for each replica is that it can be expensive from the gas consumption 
 and time execution (it really could takes relatively long time) point of view because each operation to open a channel 
-requires to work with blockchain. 
+requires to process it by the blockchain.
 
 The other one is that such model is subject to an attack where the same payment can be used for services 
-in from different replicas.
+from different replicas.
 
-This leads to a model where all snet-daemons for the same service use the shared storage.
+This leads to a model where all snet-daemons for the same service should use the shared storage.
 
 ![several replicas with several independent storages](img/payment_channel_storage_several_replicas_one_storage.jpg)
 
-
 However if there is only one instance of a storage is provided it can easily become a single point of failure
-for the whole system because its failures leads that whole payments can't be processed evem where are working replicas.
+for the whole system because its failures leads that all payments can't be processed even where are some alive replicas.
 
-
-Next step leads us to use a distributed storage. Where are plenty of available of storages and it is necessary 
+Next step leads us to use a distributed storage. Where are plenty of available storages and it is necessary
 to choose the best suited one.
 
 Which criteria should we followed to?
 
-[CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem) gives us a choice to select only two out of three guarantees:
+[CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem) gives us a choice to select only two out
+of three main guarantees:
 * Partition tolerance
 * Availability
 * Consistency
 
-At first we need a partition tolerance storage to save system from the network failures.
-At the second the storage needs to provide strong consistency guarantees to avoid a situation where the same
+We need a partition tolerance distribute storage to save system from network failures.
+Definitely the chosen storage needs to provide strong consistency guarantees to avoid a situation where the same
 payment is used twice on different replicas.
 
 No way, availability guarantee should be turned down. It means if all but a few nodes of the distributed storage are
-still available it will not be able to serve read/write requests. This is a price which we need to pay have a 
-strong consistency system.
+still available it will not be able to serve read/write requests. This is a price which we need to pay to have a
+strong consistency storage system.
 
 Lets strike out the availability guarantee and leave only partition tolerance and consistency:
 
