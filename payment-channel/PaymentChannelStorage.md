@@ -3,8 +3,6 @@
 To fulfil a request from a client to service an snet-daemon needs to store and process information about
 service payment which is referred as payment channel.
 
-
-
 If there is only one service and corresponding snet-daemon the process is easy:
 
 ![one replica](img/payment_channel_storage_single_replica.jpg)
@@ -98,7 +96,9 @@ Zookeeper is just written in Java and it requires to have an additional support 
 It means that if number of failed nodes more than half of all nodes then the the cluster stops working.
 As it was described before it is cost for a distributed system to provide strong consistency guarantee.
 
-## Running and accessing embedded etcd cluster
+## Etcd storage
+
+### Running and accessing embedded etcd cluster
 
 Starting an etcd node requires at least the following parameters:
 
@@ -111,31 +111,33 @@ Starting an etcd node requires at least the following parameters:
 
 
 The following Go code is used to start etcd node and use etcd client:
-* [etcd_storage_server.go](https://github.com/stellarspot/load-testing/blob/master/etcd/snet/etcd_storage_server.go)
-* [etcd_storage_client.go](https://github.com/stellarspot/load-testing/blob/master/etcd/snet/etcd_storage_client.go)
+* [etcd_storage_server.go](src/etcddb/etcd_storage_server.go)
+* [etcd_storage_client.go](src/etcddb/etcd_storage_client.go)
 
-There are some [throughput tests](https://github.com/stellarspot/load-testing/tree/master/etcd/snet)
+There are some [throughput tests](src/etcddb)
 which runs several etcd nodes locally and measure number of writes, and compare and set requests per seconds.
 
 Note: because all etcd nodes were run locally the results can be differ from that when each etcd node is run on its
-own server.
+own separated server.
 
-## etcd cluster size
+### etcd cluster size
 
 According to the [etcd FAQ](https://coreos.com/etcd/docs/latest/faq.html) it is suggested to have
 odd number of etcd nodes in a cluster, usually 3 or 5.
 It also mentions that "*Although larger clusters provide better fault tolerance, the write performance suffers
 because data must be replicated across more machines.*"
 
-
 ##  Proposed solutions
 
-The following solutions are discussed in details in chapters below:
+![several replicas with several independent storages](img/payment_channel_storage_several_replicas_embedded_etcd_cluster.jpg)
+
+The following solutions are based on the embedded etcd storage discussed in details in chapters below:
 * Command line etcd cluster creation
 * Fixed size etcd cluster
 * Incremental etcd cluster creation
 
-## Command line etcd cluster creation
+
+### Command line etcd cluster creation
 
 This approach is to add a command line option to snet-cli which allows to start an etcd instance
 as part of etcd cluster
@@ -144,7 +146,7 @@ as part of etcd cluster
 
 The list of client-urls then needs to be passed to each replica to have access to the etcd cluster storage.
 
-## Fixed size etcd cluster
+### Fixed size etcd cluster
 
 This approach assumes that etcd nodes are started by replicas and size of etcd cluster is fixed.
 The initial configuration file contains list of all replicas and information whether it should start etcd node or not:
@@ -163,7 +165,7 @@ For example:
 Such configuration requires that all replicas which maintain an etcd node needs to be started first
 to have functional etcd cluster.
 
-## Incremental etcd cluster creation approach
+### Incremental etcd cluster creation approach
 
 Starting etcd cluster requires that initial size of the cluster was defined during cluster bootstrap.
 It means that the cluster begins to work only when quorum number of nodes join the cluster.
@@ -185,7 +187,7 @@ It is only used in cluster bootstrap phase, and cannot be used for runtime recon
 The following algorithm describes creating and updating etcd cluster during replicas starting
 based on incremental approach.
 
-## Input
+#### Input
 
 Each replica needs to have access to the following info which is provided during the replica starting:
 * etcd cluster token value
@@ -195,7 +197,7 @@ Each replica needs to have access to the following info which is provided during
   * etcd ip address
   * ectd client and peer ports
 
-## Cluster Configuration Table
+#### Cluster Configuration Table
 
 The table with the given columns will be maintained in etcd cluster:
 * replica id
@@ -205,7 +207,7 @@ The table with the given columns will be maintained in etcd cluster:
 The last field indicates that a replica started etcd server instance and it had been alive at the time when the
 record to the Cluster Configuration Table was written.
 
-## Replicas to etcd nodes correspondence
+#### Replicas to etcd nodes correspondence
 
 Each replica can use the predefined function which return number of etcd nodes which are necessary to run
 for the given number of live replicas.
@@ -219,7 +221,7 @@ numberOfEtcdNodes(numberOfReplicas) {
 }
 ```
 
-## Detecting added and failed replicas
+#### Detecting added and failed replicas
 
 Heartbeat mechanism is suggested to use for replicas failing detection.
 
@@ -229,16 +231,16 @@ to the **Cluster Configuration Table**.
 If difference between current time and a replica is higher than a certain threshold the replica
 is considered as dead.
 
-## Detecting failed etcd nodes
+#### Detecting failed etcd nodes
 
 etcd [Admin API Documentation](https://coreos.com/etcd/docs/latest/v2/other_apis.html#checking-health-of-an-etcd-member-node)
 provides REST api to check health of etcd node
 
-## Initial state
+#### Initial state
 
 The first running replica finds that there is no an etcd cluster and starts an embedded etcd instance.
 
-## Main loop
+#### Main loop
 
 Each replica reads the **Cluster Configuration Table**, checks number of alive replicas and calculates
 number of required etcd nodes using the *numberOfEtcdNodes(numberOfReplicas)* function.
