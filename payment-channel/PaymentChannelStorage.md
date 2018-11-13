@@ -96,7 +96,7 @@ Zookeeper is just written in Java and it requires to have an additional support 
 
 `Note`: all these storages use a quorum to get a consensus during leader election and values writings.
 It means that if number of failed nodes more than half of all nodes then the the cluster stops working.
-As it was described before it is cost for a distributed system to have a strong consistency guarantee.
+As it was described before it is cost for a distributed system to provide strong consistency guarantee.
 
 ## Running and accessing embedded etcd cluster
 
