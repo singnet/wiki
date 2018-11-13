@@ -76,15 +76,11 @@ We are looking for a distributed storage with strong consistence guarantee which
 
 Some storages which were considered:
 
-| Distributed Storage                            |Language| Consensus|API|Embedding  server
-|------------------------------------------------|--------|----------|---|----
-|[Etcd](https://github.com/etcd-io/etcd)         | Go     | Raft     |[1]|[native](https://godoc.org/github.com/coreos/etcd/embed)
-|[Consul](https://github.com/hashicorp/consul)   | Go     | Raft     | - |[under question](https://github.com/hashicorp/consul/issues/467)
-|[ZooKeeper](https://github.com/apache/zookeeper)| Java   | ZAB      |[2]|as java process
-
-API:
-1. Etcd [embed](https://godoc.org/github.com/coreos/etcd/embed)
-1. ZooKeeper [server](https://zookeeper.apache.org/doc/r3.4.6/api/index.html?org/apache/zookeeper/ZooKeeper.html)
+| Distributed Storage                            |Language| Consensus|Server embedding support 
+|------------------------------------------------|--------|----------|---------
+|[Etcd](https://github.com/etcd-io/etcd)         | Go     | Raft     |[native](https://godoc.org/github.com/coreos/etcd/embed)
+|[Consul](https://github.com/hashicorp/consul)   | Go     | Raft     |[ticket 467](https://github.com/hashicorp/consul/issues/467)
+|[ZooKeeper](https://github.com/apache/zookeeper)| Java   | ZAB      |[native](https://zookeeper.apache.org/doc/r3.4.6/api/org/apache/zookeeper/server/ZooKeeperServerMain.html)
 
 
 Etcd was chosen because it is written in Go and has out of the box embedded server support.
