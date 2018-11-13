@@ -71,28 +71,36 @@ snet-daemon task to run required distributed storage nodes:
 
 ## Considered storages
 
-We are looking for simple distributed storage with strong consistence guarantee which can be run by replicas
+We are looking for a distributed storage with strong consistence guarantee which can be run by snet-daemon
 (e. g. easily integrated into Go program).
 
-Some storages under consideration:
+Some storages which were considered:
 
-| Distributed Storage                            |Language| Consensus Algorithm| Embedding  server
-|------------------------------------------------|--------|--------------------|---------
-|[etcd](https://github.com/etcd-io/etcd)         | Go     | Raft               | [native](https://godoc.org/github.com/coreos/etcd/embed)
-|[consul](https://github.com/hashicorp/consul)   | Go     | Raft               | [under question](https://github.com/hashicorp/consul/issues/467)
-|[zookeeper](https://github.com/apache/zookeeper)| Java   | ZAB                | as java process
+| Distributed Storage                            |Language| Consensus|API|Embedding  server
+|------------------------------------------------|--------|----------|---|----
+|[Etcd](https://github.com/etcd-io/etcd)         | Go     | Raft     |[1]|[native](https://godoc.org/github.com/coreos/etcd/embed)
+|[Consul](https://github.com/hashicorp/consul)   | Go     | Raft     | - |[under question](https://github.com/hashicorp/consul/issues/467)
+|[ZooKeeper](https://github.com/apache/zookeeper)| Java   | ZAB      |[2]|as java process
+
+API:
+1. Etcd [embed](https://godoc.org/github.com/coreos/etcd/embed)
+1. ZooKeeper [server](https://zookeeper.apache.org/doc/r3.4.6/api/index.html?org/apache/zookeeper/ZooKeeper.html)
 
 
-etcd was chosen because it is written in Go and has out of the box embedded server support.
+Etcd was chosen because it is written in Go and has out of the box embedded server support.
 It means that its nodes can be started and stopped by snet-daemon replicas.
 
 It is not clear is it possible to run consul server agent from a Go application.
-At least it is not easy to find information about it.
+A few examples (embedded-consul
+[1](https://github.com/golovnin/embedded-consul)
+[2](https://github.com/pszymczyk/embedded-consul))
+just bundles the Consul as a binary package.
 
+Zookeeper is just written in Java and it requires to have an additional support to start Zookeeper nodes from Go.
 
 `Note`: all these storages use a quorum to get a consensus during leader election and values writings.
 It means that if number of failed nodes more than half of all nodes then the the cluster stops working.
-As it was described before it is a price for the system to have a strong consistency.
+As it was described before it is cost for a distributed system to have a strong consistency guarantee.
 
 ## Running and accessing embedded etcd cluster
 
