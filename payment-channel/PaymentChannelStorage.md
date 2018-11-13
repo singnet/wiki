@@ -1,44 +1,76 @@
-# Strong consistency storage used by replicas
+# Payment channel storage
 
-The aim of this document is to describe a distributed storage with strong consistency guaranties used by replicas.
-
-# Justification
-
-Design of MultiPartyEscrowContract implies that there can be multiple replicas per service.
-
-There are some options how a client can interact with replicas:
-1. Open new payment channel for each replica
-1. Using the same payment channel for some or all replicas
-
-The first way allows to keep information about payment locally on each replica but it has some obvious drawbacks
-related to the fact that opening a channel requires writing to the blockchain:
-* client should pay a gas for opening channel
-* this operation takes some relatively big time
-
-The second option requires that all replicas uses the same storage to save information about payment channel
-and check that the same payment is not used twice on different replicas.
+To fulfil a request from a client to service an snet-daemon needs to store and process information about
+service payment which is referred as payment channel.
 
 
-# Requirements
 
-We expect that used storage will not be single point of failure. For example, if one node with the storage fails
-replicas still will be available to read and write values from the storage.
+If there is only one service and corresponding snet-daemon the process is easy:
 
-The storage needs to provide strong consistency. This allows to avoid a use case where a client
-provides a payment channel with the same payment to two replicas, one writes information about it to the storage and
-the second replica does not see this record and also accepts the payment.
-For this use case only one replica should be able to write a record that it accepts the payment and the another one
-should reject it.
+![one replica](img/payment_channel_storage_single_replica.jpg)
 
-This can be summarised as:
-1. Fault tolerance
-1. Strong consistency
+if payment is passes a validation process the payment channel is stored in an internal storage
+to be claimed after the service successfully accomplished the request. 
 
-However, this choice does not allow us to use availability option (e. g. if there are live storage nodes they
-can service read and write requests) because according to the [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem)
-only one option is allowed either strong consistency or availability with eventually consistency for distributed systems.
+The situation becomes more difficult if a service provides several replicas.
+In this case it is not possible just to have several separated snet-daemons each of which has an independent
+internal storage. 
 
-# Considered storages
+![several replicas with several independent storages](img/payment_channel_storage_several_replicas_several_independent_storages.jpg)
+
+One drawback of using a separated payment channel for each replica is that it can be expensive from the gas consumption 
+and time execution (it really could takes relatively long time) point of view because each operation to open a channel 
+requires to work with blockchain. 
+
+The other one is that such model is subject to an attack where the same payment can be used for services 
+in from different replicas.
+
+This leads to a model where all snet-daemons for the same service use the shared storage.
+
+![several replicas with several independent storages](img/payment_channel_storage_several_replicas_one_storage.jpg)
+
+
+However if there is only one instance of a storage is provided it can easily become a single point of failure
+for the whole system because its failures leads that whole payments can't be processed evem where are working replicas.
+
+
+Next step leads us to use a distributed storage. Where are plenty of available of storages and it is necessary 
+to choose the best suited one.
+
+Which criteria should we followed to?
+
+[CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem) gives us a choice to select only two out of three guarantees:
+* Partition tolerance
+* Availability
+* Consistency
+
+At first we need a partition tolerance storage to save system from the network failures.
+At the second the storage needs to provide strong consistency guarantees to avoid a situation where the same
+payment is used twice on different replicas.
+
+No way, availability guarantee should be turned down. It means if all but a few nodes of the distributed storage are
+still available it will not be able to serve read/write requests. This is a price which we need to pay have a 
+strong consistency system.
+
+Lets strike out the availability guarantee and leave only partition tolerance and consistency:
+
+* Partition tolerance
+* ~~Availability~~
+* Consistency
+
+
+The new design now looks like:
+
+![several replicas with several independent storages](img/payment_channel_storage_several_replicas_separate_etcd_cluster.jpg)
+
+The current approach is fine but it requires for a service owner not only setup an snet-daemon for each replica 
+but also to deploy a separated distributed storage. This can be rather tedious and complicated task.
+To avoid this it would be good to incorporate the distributed storage nodes into snet-daemons so it would be the
+snet-daemon task to run required distributed storage nodes:
+
+![several replicas with several independent storages](img/payment_channel_storage_several_replicas_embedded_etcd_cluster.jpg)
+
+## Considered storages
 
 We are looking for simple distributed storage with strong consistence guarantee which can be run by replicas
 (e. g. easily integrated into Go program).
@@ -63,7 +95,7 @@ At least it is not easy to find information about it.
 It means that if number of failed nodes more than half of all nodes then the the cluster stops working.
 As it was described before it is a price for the system to have a strong consistency.
 
-# Running and accessing embedded etcd cluster
+## Running and accessing embedded etcd cluster
 
 Starting an etcd node requires at least the following parameters:
 
@@ -85,7 +117,7 @@ which runs several etcd nodes locally and measure number of writes, and compare 
 Note: because all etcd nodes were run locally the results can be differ from that when each etcd node is run on its
 own server.
 
-# etcd cluster size
+## etcd cluster size
 
 According to the [etcd FAQ](https://coreos.com/etcd/docs/latest/faq.html) it is suggested to have
 odd number of etcd nodes in a cluster, usually 3 or 5.
@@ -93,15 +125,14 @@ It also mentions that "*Although larger clusters provide better fault tolerance,
 because data must be replicated across more machines.*"
 
 
-#  Proposed solutions
+##  Proposed solutions
 
 The following solutions are discussed in details in chapters below:
 * Command line etcd cluster creation
 * Fixed size etcd cluster
 * Incremental etcd cluster creation
 
-
-# Command line etcd cluster creation
+## Command line etcd cluster creation
 
 This approach is to add a command line option to snet-cli which allows to start an etcd instance
 as part of etcd cluster
@@ -110,7 +141,7 @@ as part of etcd cluster
 
 The list of client-urls then needs to be passed to each replica to have access to the etcd cluster storage.
 
-# Fixed size etcd cluster
+## Fixed size etcd cluster
 
 This approach assumes that etcd nodes are started by replicas and size of etcd cluster is fixed.
 The initial configuration file contains list of all replicas and information whether it should start etcd node or not:
@@ -129,7 +160,7 @@ For example:
 Such configuration requires that all replicas which maintain an etcd node needs to be started first
 to have functional etcd cluster.
 
-# Incremental etcd cluster creation approach
+## Incremental etcd cluster creation approach
 
 Starting etcd cluster requires that initial size of the cluster was defined during cluster bootstrap.
 It means that the cluster begins to work only when quorum number of nodes join the cluster.
