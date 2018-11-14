@@ -20,7 +20,7 @@ In this tutorial we'll publish a basic service in SingularityNET using Kovan Tes
 Setup a `ubuntu:18.04` docker container using provided `Dockerfile`.
 
 ```
-$ docker build -t snet_service https://github.com/arturgontijo/wiki.git#tutorial_cpp_service:/tutorials/Docker
+$ docker build -t snet_service https://github.com/singnet/wiki.git#master:/tutorials/Docker
 $ docker run -p 7000:7000 -ti snet_service bash
 ```
 

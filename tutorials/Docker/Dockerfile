@@ -36,7 +36,7 @@ RUN cd ${SINGNET_REPOS} && \
     mv snetd-linux-amd64 /usr/bin/snetd
 
 RUN cd ${SINGNET_REPOS} && \
-    git clone -b tutorial_cpp_service https://github.com/arturgontijo/wiki.git
+    git clone https://github.com/singnet/wiki.git
 
 RUN if [ "$language" = "cpp" ]; \
     then    apt-get install -y build-essential autoconf libtool pkg-config libgflags-dev libgtest-dev clang libc++-dev; \
