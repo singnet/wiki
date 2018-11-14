@@ -1,9 +1,17 @@
 #!/bin/sh
 
+if [ -z "$1" ]
+  then
+    echo "Invalid PRIVATE_KEY: ./publishAndStartService.sh PRIVATE_KEY"
+    exit 1
+fi
+
+echo "Publishing your service. Please wait..."
+
 TMP_FILE=/tmp/__SNET_SERVICE_PUBLISH_LOG.txt
 rm -f $TMP_FILE
-yes | snet service publish 2>&1 | tee $TMP_FILE
-./bin/server &
+snet service publish -y 2>&1 | tee $TMP_FILE
+./server &
 AGENT_ADDRESS=$(cat $TMP_FILE | grep current_agent_at | cut -d" " -f3)
 sed -i "s/__AGENT_ADDRESS__/$AGENT_ADDRESS/g" __DAEMON_CONFIG_FILE__
 sed -i "s/__AGENT_ADDRESS__/$AGENT_ADDRESS/g" __TEST_SCRIPT_FILENAME__
