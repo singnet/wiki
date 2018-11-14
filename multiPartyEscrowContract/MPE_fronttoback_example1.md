@@ -176,7 +176,7 @@ We will need .proto file from the running service
 
 ```
 # compile protobuf for payment channel 0
-snet mpe-client compile_from_file $SINGNET_REPOS dnn-model-services/Services/gRPC/Basic_Template/service/service_spec/ basic_tamplate_rpc.proto 0
+snet mpe-client compile_from_file $SINGNET_REPOS/dnn-model-services/Services/gRPC/Basic_Template/service/service_spec/ basic_tamplate_rpc.proto 0
 ```
 
 #### Make a call using stateless logic
