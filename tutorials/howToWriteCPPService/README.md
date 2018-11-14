@@ -36,7 +36,7 @@ In this tutorial we'll develop our service inside the docker container.
 Setup a `ubuntu:18.04` docker container using provided `Dockerfile`.
 
 ```
-$ docker build --build-arg language=cpp -t snet_cpp_service https://github.com/arturgontijo/wiki.git#tutorial_cpp_service:/tutorials/Docker
+$ docker build --build-arg language=cpp -t snet_cpp_service https://github.com/singnet/wiki.git#master:/tutorials/Docker
 $ docker run -p 7000:7000 -ti snet_cpp_service bash
 ```
 
