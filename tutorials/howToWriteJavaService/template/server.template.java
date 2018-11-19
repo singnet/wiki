@@ -11,12 +11,9 @@ public class JavaServer {
 
     private Server server;
 
-    private void start(int portParam) throws IOException {
+    private void start() throws IOException {
         /* The port on which the server should run */
         int port = __SERVICE_PORT__;
-        if (portParam > 0){
-            port = portParam;
-        }
         server = ServerBuilder.forPort(port)
                 .addService(new ServiceDefinitionImpl())
                 .build()
@@ -52,18 +49,8 @@ public class JavaServer {
      * Main launches the server from the command line.
      */
     public static void main(String[] args) throws IOException, InterruptedException {
-        int port = __SERVICE_PORT__;
-        for (String arg : args) {
-             arg = arg.toUpperCase().trim();
-            if (arg.contains("--PORT")) {
-                String[] argPort = arg.split("=");
-                if(Integer.valueOf(argPort[1]).intValue() > 0) {
-                    port = Integer.valueOf(argPort[1]).intValue();
-                }
-             }
-        }
         final JavaServer server = new JavaServer();
-        server.start(port);
+        server.start();
         server.blockUntilShutdown();
     }
 

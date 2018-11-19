@@ -183,7 +183,7 @@ To test our server locally (without using the blockchain)
 ```
 In a new terminal instance
 ```
-# java -jar ./bin/JavaClient.jar
+# java -jar ./bin/JavaClient.jar 10 5
 ```
 
 You should have something like the following output:
@@ -193,7 +193,7 @@ java -jar ./bin/JavaServer.jar &
 [1] 1627
 # Nov 18, 2018 5:27:16 AM JavaServer start
 INFO: Server listening on 7070
-java -jar ./bin/JavaClient.jar
+java -jar ./bin/JavaClient.jar 10 5
 Client connected on port: 7070
 Nov 18, 2018 5:30:13 AM JavaClient div
 INFO: Trying to div 10 by 5

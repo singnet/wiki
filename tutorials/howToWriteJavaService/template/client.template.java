@@ -43,21 +43,20 @@ public class JavaClient {
     }
 
     public static void main(String[] args) throws Exception {
-        int port = __SERVICE_PORT__;
-        for (String arg : args) {
-             arg = arg.toUpperCase().trim();
-            if (arg.contains("--PORT")) {
-                String[] argPort = arg.split("=");
-                if(Integer.valueOf(argPort[1]).intValue() > 0) {
-                    port = Integer.valueOf(argPort[1]).intValue();
-                }
-             }
-        }
-        JavaClient client = new JavaClient("localhost", port);
+        JavaClient client = null;
         try {
-            System.out.println("Client connected on port: "+ String.valueOf(port));
-            client.div(10, 5);
-        } finally {
+            int port = __SERVICE_PORT__;
+            int paramA = Integer.valueOf(args[0]);
+            int paramB = Integer.valueOf(args[1]);
+            client = new JavaClient("localhost", port);
+            System.out.println("Client connected on port: " + String.valueOf(port));
+            client.div(paramA, paramB);
+        }catch (ArrayIndexOutOfBoundsException ex) {
+            System.out.println("Twao parameters needed. Example: 100 50");
+            client.shutdown();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }finally {
             client.shutdown();
         }
     }
