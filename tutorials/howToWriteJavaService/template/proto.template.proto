@@ -3,20 +3,12 @@ syntax = "proto3";
 option java_generic_services = true;
 option java_multiple_files = true;
 
-message IntPair {
-    int32 a = 1;
-    int32 b = 2;
+message Input {
 }
 
-message SingleInt {
-    int32 v = 1;
-}
-
-message SingleString {
-    string s = 1;
+message Output {
 }
 
 service ServiceDefinition {
-    rpc div(IntPair) returns (SingleInt) {}
-    rpc check(SingleInt) returns (SingleString) {}
+    rpc doSomething(Input) returns (Output) {}
 }
