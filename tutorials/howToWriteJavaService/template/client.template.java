@@ -25,21 +25,8 @@ public class JavaClient {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    public void div(int a, int b) {
-        logger.info("Trying to divide "+a+" by "+ b);
-        IntPair request = IntPair.newBuilder().setA(a).setB(b).build();
-        SingleInt response;
-        try {
-            response = blockingStub.div(request);
-            logger.log(Level.INFO, "Result: " + response.getV());
-        } catch (StatusRuntimeException e) {
-            logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-            return;
-        }
-    }
     // TEST_CODE
-    public void check(int single) {
-        return;
+    public void doSomething(int a, int b) {
     }
 
     public static void main(String[] args) throws Exception {
@@ -52,7 +39,7 @@ public class JavaClient {
             System.out.println("Client connected on port: " + String.valueOf(port));
             client.div(paramA, paramB);
         }catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("Twao parameters needed. Example: 100 50");
+            System.out.println("Two parameters needed. Example: 100 50");
             client.shutdown();
         }catch (Exception ex) {
             ex.printStackTrace();

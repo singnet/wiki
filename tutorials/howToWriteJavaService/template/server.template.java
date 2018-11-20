@@ -58,19 +58,8 @@ public class JavaServer {
     static class ServiceDefinitionImpl extends ServiceDefinitionGrpc.ServiceDefinitionImplBase {
 
         @Override
-        public void div(IntPair request, StreamObserver<SingleInt> responseObserver) {
-            int result = request.getA() / request.getB();
-            SingleInt reply = SingleInt.newBuilder().setV(result).build();
-            responseObserver.onNext(reply);
-            responseObserver.onCompleted();
-        }
-
-        @Override
-        public void check(SingleInt request,StreamObserver<SingleString> responseObserver) {
-            String result = String.valueOf(request.getV());
-            SingleString reply = SingleString.newBuilder().setS(result).build();
-            responseObserver.onNext(reply);
-            responseObserver.onCompleted();
+        public void doSomething(Input request, StreamObserver<Output> responseObserver) {
+            
         }
     }
 }

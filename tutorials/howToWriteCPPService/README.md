@@ -28,9 +28,6 @@ which can cause issues if you later want to remove the grpc and/or protobuf
 installation or upgrade to a newer version."
 ```
 
-If you want to install C++ gRPC in your workstation, look for the section "C++ gRPC" in
-'setupContainer.sh' or follow the instructions in https://github.com/grpc/grpc/blob/master/BUILDING.md
-
 In this tutorial we'll develop our service inside the docker container.
 
 Setup a `ubuntu:18.04` docker container using provided `Dockerfile`.
@@ -162,7 +159,7 @@ using tutorial::SingleInt;
 using tutorial::SingleString;
 ```
 
-Now look for `TEST_CODE` and Replace `doSomething()` implementation by our
+Now look for `TEST_CODE` and replace `doSomething()` implementation by our
 testing code:
 
 
