@@ -132,7 +132,7 @@ class ServiceDefinition(pb2_grpc.ServiceDefinitionServicer):
 Now we'll write a client to test our server locally (without using the
 blockchain). Edit `client.py`.
 
-Look for `TEST_CODE` and Replace `doSomething()` implementation by our
+Look for `TEST_CODE` and replace `doSomething()` implementation by our
 testing code:
 
 ```Python

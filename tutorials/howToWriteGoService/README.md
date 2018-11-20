@@ -121,7 +121,7 @@ func (s *server) Check(ctx context.Context, in *pb.SingleInt) (*pb.SingleString,
 Now we'll write a client to test our server locally (without using the
 blockchain). Edit `client.go`.
 
-Look for `TEST_CODE` and Replace `doSomething()` implementation by our
+Look for `TEST_CODE` and replace `doSomething()` implementation by our
 testing code:
 
 

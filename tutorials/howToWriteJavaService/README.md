@@ -36,7 +36,7 @@ From this point we follow the turorial in the Docker container's prompt.
 
 Create the skeleton structure for your service's project
 
-```
+```bash
 # ./create_project.sh PROJECT_NAME SERVICE_NAME SERVICE_PORT
 ```
 
@@ -112,7 +112,7 @@ in the API. The `service` statement defines the RPC API itself.
 
 In order to actually implement our API we need to edit the `JavaServer.java file`.
 
-Look for //`SERVICE_API` and replace `div() or check()` by our actual API methods:
+Look for //`SERVICE_API` and replace `doSomething()` by our actual API methods:
 
 ```Java
 
@@ -124,36 +124,30 @@ public void div(IntPair request, StreamObserver<SingleInt> responseObserver) {
     responseObserver.onCompleted();
 }
 
-@Override
-public void check(SingleInt request,StreamObserver<SingleString> responseObserver) {
-    String result = String.valueOf(request.getV());
-    SingleString reply = SingleString.newBuilder().setS(result).build();
-    responseObserver.onNext(reply);
-    responseObserver.onCompleted();
-}
 ```
 ## Step 5
 
 Now we'll write a client to test our server locally (without using the
 blockchain). Edit `JavaClient.java`.
 
-Look for //`TEST_CODE` and Replace `check()` implementation by our
+Look for //`TEST_CODE` and replace `doSomething()` implementation by our
 testing code:
 
 
 ```Java
-public void check(int single) {
-    boolean result;
-    SingleInt request = SingleString.newBuilder().setV(single).build();
-    SingleString response;
+public void div(int a, int b) {
+    logger.info("Trying to divide "+a+" by "+ b);
+    IntPair request = IntPair.newBuilder().setA(a).setB(b).build();
+    SingleInt response;
     try {
-        response = blockingStub.check(request);
-        logger.log(Level.INFO, "Result:" + response.getS());
+        response = blockingStub.div(request);
+        logger.log(Level.INFO, "Result: " + response.getV());
     } catch (StatusRuntimeException e) {
         logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
         return;
     }
 }
+
 ```
 
 ## Step 6
