@@ -63,4 +63,17 @@ RUN if [ "$language" = "go" ]; \
             go get -v -u google.golang.org/grpc; \
     fi
 
+RUN if [ "$language" = "java" ]; \
+    then    apt-get install -y unzip openjdk-8-jdk; \  
+            curl -OL https://github.com/google/protobuf/releases/download/v3.6.1/protoc-3.6.1-linux-x86_64.zip; \
+            unzip protoc-3.6.1-linux-x86_64.zip -d protoc3; \
+            mv protoc3/bin/* /usr/local/bin/; \
+            mv protoc3/include/* /usr/local/include/; \
+            rm -rf protoc3; \
+            rm protoc-3.6.1-linux-x86_64.zip; \
+            curl -OL http://central.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.16.1/protoc-gen-grpc-java-1.16.1-linux-x86_64.exe; \
+            mv protoc-gen-grpc-java-1.16.1-linux-x86_64.exe /usr/local/bin/protoc-gen-grpc-java; \
+            chmod +x /usr/local/bin/protoc-gen-grpc-java; \ 
+    fi
+
 WORKDIR ${SINGNET_REPOS}
