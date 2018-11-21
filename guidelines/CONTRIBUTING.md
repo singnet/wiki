@@ -163,6 +163,3 @@ see https://www.python.org/download/releases/
 
 Fix #1234
 ```
-
-[issue-template]: https://github.com/singnet/brand-mgmt-demo/issues/new?template=BUG_REPORT.md
-[feature-template]: https://github.com/singnet/brand-mgmt-demo/issues/new?template=FEATURE_REQUEST.md
