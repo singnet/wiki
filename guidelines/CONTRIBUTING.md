@@ -10,14 +10,13 @@ Are you ready to contribute to SingularityNET ? We'd love to have you on board, 
 -   [Git Commit Guidelines](#commit)
 
 ## <a name="question"></a> Questions and help
-[question-template]: https://github.com/singnet/brand-mgmt-demo/issues/new?template=SUPPORT_QUESTION.md
 This is our guideline for [Issues and Bugs](#issue) and for [Feature Requests](#feature).
 
 If you have a question on using this project, please join our [Telegram chat room](https://telegram.me/singularitynet) or use the project name tag on [StackOverflow](http://stackoverflow.com/tags/singularitynet).
 
 ## <a name="issue"></a> Issues and Bugs
 
-If you find a bug in the source code or a mistake in the documentation, you can help us by submitting a ticket to our GitHub issues. Even better, you can submit a Pull Request to ours projects.
+If you find a bug in the source code or a mistake in the documentation, you can help us by submitting a ticket to our GitHub issues. Even better, you can submit a Pull Request to our projects.
 
 **Please see the Submission Guidelines below**.
 
