@@ -47,17 +47,20 @@ implement a new "command" to the Opencog "service" which is already in place.
 The `sync` keyword in the above command line is not relevant here.
 Take a look at [this document][services-readme] for details.
 
+**Note:** If you decided to run the server to actually test the client command
+above, make sure you kill it before moving on.
+
 ## Step 2
 
 We'll implement 2 versions of a "Hello world" command, one in C++ and another
 in Scheme. We need different names for the two commands so we'll call them
-HelloWorld and HelloWorld2.
+HelloWorld and HelloWorld2 respectively.
 
 ### Step 2a
 
 For the C++ command, we need to implement a C++ class (with separated .h and .cc) in `src/cpp-services`.
 The class is supposed to have the exact name of the command in `CamelCase` notation.
-So the header file `HelloWorld.h` will look like this:
+So the header file `src/cpp-services/HelloWorld.h` will look like this:
 
 ```
 #ifndef _OPENCOGSERVICES_HELLOWORLD_H
@@ -89,13 +92,13 @@ private:
 
 The command class need to inherit from `OpencogSNETService`. The only required
 method is `execute()` but `OpencogSNETService` has other implemented help
-methods explained later in this tutorial.
+methods explained [here](#Additional-helper-methods-in-OpencogSNETService)
 
 `execute()` expects a reference to std::string where its output is supposed to
 be written and a std::vector with the input arguments. In our case we expect no
 arguments.
 
-So we only need to implement `execute()` in `HelloWorld.cc`. In our case it may
+So we only need to implement `execute()` in `src/cpp-services/HelloWorld.cc`. In our case it may
 look like this:
 
 ```
@@ -119,8 +122,8 @@ our `HelloHorld` implementation will just return `false` meaning that
 everything is OK.
 
 Once the class is ready, edit `src/OpencogSNETServiceFactory.cc` and add an
-`#include` statement and another `else if` clause corresponding to your new
-command in the method `factory()`.
+`#include` statement and another `else if` clause in the method `factory()`
+according to your new command name.
 
 Although `OpencogSNETServiceFactory` may compile if you use different names for
 the command and C++ class, you are supposed to use the exact same name.
@@ -141,7 +144,7 @@ For the Scheme command, we need to implement a [Scheme][scheme] file in
 defining a funcion named `execute` which expects one single argument (a list with
 all the arguments to the function).
 
-So our Scheme file `HelloWorld2.scm` will look like this:
+So our Scheme file `src/scm-services/HelloWorld2.scm` will look like this:
 
 ```
 (define (execute args)
@@ -150,9 +153,9 @@ So our Scheme file `HelloWorld2.scm` will look like this:
 ```
 
 If the command expects arguments, they will be passed as a list to the function.
-You can make an arbritary number of valid Scheme calls in your file. For
-example, load new modules, define several global variables or helper functions.
-The only requisite is that you define a function with the exact name of the
+You can make an arbritary number of valid Scheme calls in your file e.g.
+load new modules, define several global variables or helper functions etc.
+The only requisite is that you nned to define a function with the exact name of the
 command expecting a list of arguments as the only parameter.
 
 **Important:** Anything the command send to `stdout` (e.g. by calling the 
@@ -212,8 +215,8 @@ Create a new file `HelloWorld/testCases.txt` like this:
 
 ```
 {"test-cases": [
-{"input": "", "output": "t.txt"},
-}
+{"input": "", "output": "t.txt"}
+]}
 
 ```
 
@@ -269,4 +272,8 @@ and what is their expected output.
 ## Step 5
 
 You are ready to submit your PR. Read our
-[contribution guidelines][contribution-guidelines] before submiting your PR.
+[contribution guidelines][contribution-guidelines] before submiting it.
+
+## Additional helper methods in OpencogSNETService
+
+
