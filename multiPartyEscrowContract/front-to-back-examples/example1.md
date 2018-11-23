@@ -18,7 +18,7 @@ from the client side:
 
 ## Preparation
 
-Please follow the tutorial [Build-and-deploy-SingularityNET-locally](https://github.com/singnet/wiki/wiki/Tutorial:-Build-and-deploy-SingularityNET-locally) in order to deploy SingularitNet localy.
+Please follow the tutorial [Build-and-deploy-SingularityNET-locally](Build-and-deploy-SingularityNET-locally.md) in order to deploy SingularitNet localy.
 
 The following example can be also excecuted on the kovan test net, but you will need to make sure that your organization name haven't been already taken and use another account for the collect payment from the client side (see KOVAN warnings bellow) 
 
