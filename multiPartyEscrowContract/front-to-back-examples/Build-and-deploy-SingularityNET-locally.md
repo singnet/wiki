@@ -224,7 +224,7 @@ Truffle deploys contracts using first account of the test network. As Singularit
 
 ### Create Ethereum identity for snet-cli
 
-reate new identity to call SingularityNET using ```snet``` tool and make it default identity:
+Create new Ethereum identity in ```snet```:
 
 ```
 snet identity create snet-user key --private-key 0xc71478a6d0fe44e763649de0a0deb5a080b788eefbbcf9c6f7aef0dd5dbd67e0
