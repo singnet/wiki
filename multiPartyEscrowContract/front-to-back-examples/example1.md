@@ -126,7 +126,7 @@ cat > snetd.config.json << EOF
 EOF
 ```
 
-It should be noted that we use wrong private address, because this daemon will not need it.
+It should be noted that we use wrong private address, because this daemon will not make any on-chain calls.
 
 ###### Run daemon
 
