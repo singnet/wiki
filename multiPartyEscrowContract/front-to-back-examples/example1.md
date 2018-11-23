@@ -3,6 +3,8 @@
 Simple front to back example of using MPE payment system in
 SingularityNET with one replica configuration.
 
+You can find scripts for this examples here: [scripts/example1](scripts/example1)
+
 We will demonstrate the following.
 
 from the service side:
@@ -14,12 +16,11 @@ from the client side:
 * How to open the payment channel 
 * How to make calls using MPE payment system
 
-## Preparation 
-Please follow the tutorial  
-[Build-and-deploy-SingularityNET-locally](https://github.com/singnet/wiki/wiki/Tutorial:-Build-and-deploy-SingularityNET-locally) in order to deploy SingularitNet localy.
+## Preparation
 
-The following example can be also excecuted on the kovan test net, but you will need to make sure that your organization name haven't been already taken and use 
-another account for the collect payment from the client side (see KOVAN warnings bellow) 
+Please follow the tutorial [Build-and-deploy-SingularityNET-locally](https://github.com/singnet/wiki/wiki/Tutorial:-Build-and-deploy-SingularityNET-locally) in order to deploy SingularitNet localy.
+
+The following example can be also excecuted on the kovan test net, but you will need to make sure that your organization name haven't been already taken and use another account for the collect payment from the client side (see KOVAN warnings bellow) 
 
 For our local network we assume the following accounds
 
