@@ -54,8 +54,7 @@ It will start the service at the port 7003.
 #### Register your service in Registry
 
 
-Prepare metadata (service_metadata.json). We will register the second ganache identity (0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB) 
-as a recipint wallet.
+Prepare metadata (service_metadata.json). We will register the second ganache identity (0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB) as a recipient wallet.
 
 (KOVAN) On KOVAN network you might want to choose another wallet.  
 
@@ -81,6 +80,7 @@ snet service publish testo tests -y
 
 ###### Preparation
 
+We assume that executable file for the daemon is placed in $SINGNET_REPOS/snet-daemon/build/snetd-linux-amd64
 
 ```
 # You could start the daemon from any directory
@@ -188,7 +188,7 @@ snet client call 0 0.1 localhost:8080 mul '{"a":6,"b":7}'
 snet client call 0 0.1 localhost:8080 add '{"a":10,"b":32}'
 ```
 
-## Claim channel by treasurer server
+## Claim channel by treasurer server (service provider side)
 
 At the moment treasurer server logic is implemented as part of the daemon. 
 
@@ -222,9 +222,7 @@ cat > snetd.config.json << EOF
 EOF
 ```
 
-There is important different in configuration between daemon and treasurer server
-* In treasurer server we must provide ethereum identity (private key in this case), because treasurer 
-server will need make on-chain transaction (which is different from daemon who didn't need to send any on-chain transactions).
+There is an important difference in configuration between daemon and treasurer server: In treasurer server we must provide ethereum identity (private key in this case), because treasurer server will need make on-chain transaction (which is different from daemon who didn't need to send any on-chain transactions).
 
 
 
