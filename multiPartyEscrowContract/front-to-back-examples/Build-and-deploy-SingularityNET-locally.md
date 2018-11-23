@@ -140,7 +140,7 @@ Install blockchain dependencies and snet-cli package in development mode.
 pip3 install -e .
 ```
 
-Set correct address for contracts in the local blockchain. Our network will be run with networkId=829257324 and mnemonics "gauge enact biology destroy normal tunnel slight slide wide sauce ladder produce".
+Setup in snet-cli correct address for contracts in the local blockchain. Our network will be run with networkId=829257324 and mnemonics "gauge enact biology destroy normal tunnel slight slide wide sauce ladder produce".
 
 ```
 echo '{"829257324":{"events":{},"links":{},"address":"0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e","transactionHash":""}}' > snet_cli/resources/contracts/networks/MultiPartyEscrow.json
