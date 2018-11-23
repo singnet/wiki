@@ -208,7 +208,7 @@ Start local Ethereum network. Pass mnemonic to produce deterministic blockchain 
 
 ```
 cd $SINGNET_REPOS/platform-contracts
-./node_modules/.bin/ganache-cli --mnemonic 'gauge enact biology destroy normal tunnel slight slide wide sauce ladder produce' >$GOPATH/log/ganache.log 2>&1 &
+./node_modules/.bin/ganache-cli --mnemonic 'gauge enact biology destroy normal tunnel slight slide wide sauce ladder produce' >$GOPATH/log/ganache.log --networkId 829257324 2>&1 &
 ```
 
 Accounts and private keys printed by Ganache will be used in next steps. Deploy contracts using Truffle.
