@@ -151,7 +151,7 @@ snet identity snet-user
 snet client deposit 100.1
 
 # open channel with our service (organization=testo service_name=tests)
-# channel with channel_id=0 should be created and initialized
+# channel with channel_id=0 should be created and initialized after this call
 snet client open_init_channel_registry testo tests 42 100000000 -y
 
 ```
@@ -168,6 +168,12 @@ snet client print_all_channels
 ```
 
 We should have one channel with recipient=0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB, and we should have 42 AGI in it.
+
+In order to make an actual call the channel should be initialized (mainly protobuf should be compiled).
+Let's check the list of initialized channels
+```
+snet client print_initialized_channels
+```
 
 Now we can make a call
 ```
