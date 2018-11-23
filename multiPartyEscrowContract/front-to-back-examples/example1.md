@@ -1,4 +1,4 @@
-# Front to back example of MPE payment system (Example1)
+﻿# Front to back example of MPE payment system (Example1)
 
 Simple front to back example of using MPE payment system in
 SingularityNET with one replica configuration.
@@ -20,9 +20,9 @@ from the client side:
 
 Please follow the tutorial [Build-and-deploy-SingularityNET-locally](Build-and-deploy-SingularityNET-locally.md) in order to deploy SingularitNet localy.
 
-The following example can be also excecuted on the kovan test net, but you will need to make sure that your organization name haven't been already taken and use another account for the collect payment from the client side (see KOVAN warnings bellow) 
+The following example can be also executed on the kovan test net, but you will need to make sure that your organization name haven't been already taken and use another account for the collect payment from the client side (see KOVAN warnings bellow) 
 
-For our local network we assume the following accounds
+For our local network we assume the following accounts
 
 ```bash
 # First Address (snet identity): 0x592E3C0f3B038A0D673F19a18a773F993d4b2610
@@ -151,7 +151,7 @@ snet identity snet-user
 snet client deposit 100.1
 
 # open channel with our service (organization=testo service_name=tests)
-# channel with channel_id=0 should be created and initilized
+# channel with channel_id=0 should be created and initialized
 snet client open_init_channel_registry testo tests 42 100000000 -y
 
 ```
