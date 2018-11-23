@@ -205,21 +205,21 @@ ipfs daemon >$GOPATH/log/ipfs.log 2>&1 &
 ### Start local Ethereum network
 
 Start local Ethereum network. Pass mnemonic to produce deterministic blockchain environment: accounts, private keys and behavior.
+We also set predefined networkId=829257324. 
 
 ```
 cd $SINGNET_REPOS/platform-contracts
 ./node_modules/.bin/ganache-cli --mnemonic 'gauge enact biology destroy normal tunnel slight slide wide sauce ladder produce' >$GOPATH/log/ganache.log --networkId 829257324 2>&1 &
 ```
-
 Accounts and private keys printed by Ganache will be used in next steps. Deploy contracts using Truffle.
 
 ```
 ./node_modules/.bin/truffle migrate --network local 
 ```
 
-Contract addresses printed after deployment will be used in next steps. 
+Contract addresses printed after deployment was already used for setup snet. 
 
-Truffle deploys contracts using first account of the test network. As SingularityNETToken contract is deployed using this account this account's balance keeps all of SingularityNET tokens issued during deployment. Other contracts deployed are Registry and MultiPartyEscrow. Registry keeps the list of organization and published services. 
+Truffle deploys contracts using first account of the test network. As SingularityNETToken contract is deployed using this account this account's balance keeps all of SingularityNET tokens issued during deployment. Other contracts deployed are Registry and MultiPartyEscrow. Registry keeps the list of organization and published services, and MultiPartyEscrow is a part of our payment system.
 
 
 ### Create Ethereum identity for snet-cli
