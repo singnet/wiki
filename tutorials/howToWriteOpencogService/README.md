@@ -91,8 +91,8 @@ private:
 ```
 
 The command class need to inherit from `OpencogSNETService`. The only required
-method is `execute()` but `OpencogSNETService` has other implemented help
-methods explained [here](#Additional-helper-methods-in-OpencogSNETService)
+method is `execute()` but `OpencogSNETService` has other implemented helper
+methods explained [here](#Additional-helper-methods-in-OpencogSNETService).
 
 `execute()` expects a reference to std::string where its output is supposed to
 be written and a std::vector with the input arguments. In our case we expect no
