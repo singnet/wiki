@@ -2,7 +2,7 @@
 
 - [Install prerequisites](#install-prerequisites)
 - [Deploy local environment](#deploy-local-environment)
-- [Start environment](#start-environment)
+- [Start environment](#Start environment and finalize snet configuration)
 
 ## Overview
 
