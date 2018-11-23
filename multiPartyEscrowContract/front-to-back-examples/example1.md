@@ -140,7 +140,7 @@ It should be noted that we use wrong private address, because this daemon will n
 #### Open the payment channel with service provider 
 
 
-(KOVAN) For KOVAN network you will need to change organization name and service_name.
+(KOVAN) For KOVAN network you should make sure that you use right names for organization and service.
 
 ```
 # create identity in snet-cli (probably you've already done it) 
