@@ -3,7 +3,6 @@
 ##### Ethereum Mainnet
 
 * Token Address: [0x8eb24319393716668d768dcec29356ae9cffe285](https://etherscan.io/address/0x8eb24319393716668d768dcec29356ae9cffe285)
-* Exchanges: https://coinmarketcap.com/currencies/singularitynet/#markets
 
 ##### Kovan Testnet
 
