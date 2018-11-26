@@ -125,13 +125,12 @@ Informal description:
 
 * Client deposit tokens to the MPE. We could propose to everybody to use MPE as a wallet for all theirs AGI tokens
 * Client select service provider.
-* Client open the payment channel with one of replicas from the chosen choosen payment group. 
-* It should be noted that the client can send requests to any replica from the selected payment group, not only to the replica with which he has the channel (replicas in one payment groups should share state of the payment channel amoung them)
-* Client starts to send requests to the replicas. With each call he send the signed authorization to take the commutative amount of the tokens which are due.
-* At some point server can decide to close/reopen channel in order to fix the profit. At the next call from the client, the server should inform the client that the channel has been
-closed/reopend (that "nonce" of the channel has been changed). Client can also obtain this information by listening events from the MPE. 
-Of course, the client should reset "the commutative amount".
-* At some point the client can decide to extend expiration data or/and escrow more funds.
+* Client open with choosen payment group. 
+* It should be noted that the client can send requests to any replica from the selected payment group (replicas in one payment groups should share state of the payment channel amoung them)
+* Client starts to send requests to the replicas. With each call he send the signed authorization for the server to "withdraw" the commutative amount of the tokens which are due.
+* At some point server can decide to close/reopen channel in order to fix the profit. At the next call from the client, the server should inform the client that 
+that "nonce" of the channel has been changed (see [state-less logic](MultiPartyEscrow_stateless_client.md) ). 
+* At some point the client can decide to extend expiration or/and escrow more funds.
 * It should be noted that because of two previous items the channel can exist forever.
 
 Formal example:
@@ -180,9 +179,9 @@ We assume that REPLICA1 is from payment group with groupId=group1
 ### Remarks
 
 * Service provider can use the same ethereum address for all payment goups or he can use different address. 
-In any case, the replicas very rarely need to send on-chain transactions. It means, that we actually don't need to provide the demons with direct access to the private key. 
+In any case, the daemons very rarely need to send on-chain transactions. It means, that we actually don't need to provide the demons with direct access to the private key. 
 Instead it could be some centralized server to sign the transactions from the daemons (in some cases it even can be done in semi-manual manner by the service owner). We call such server a treasurer server.
-* In the current implementation the client sign off-chain authorization messages with the "signer" private key. It means that the client don't necessary need to sign transaction with his ethereum identity, instead he can generate another key pairs.
+* In the current implementation the client sign off-chain authorization messages with the "signer" private key. It means that the client don't necessary need to sign transaction with his ethereum identity, instead he can use another key pairs.
 * Server do not need to wait the confirmation from the blockchain after he sends on-chain request to close/reopen the channel
   (channelClaim). He can inform the client that nonce of the channel have changed, and start accepting calls from the client with a new nonce. It can be shown that it is secure for both the client and the server, of course only if transaction is accepted by blockchain before expiration date of the channel. Similarly the client don't need to wait the confirmation from the blockchain after sending channelExtendAndAddFunds. It makes MPE functional even on very slow Ethereum network.  
 * nonce in the channel prevent race condition between channelExtendAndAddFunds and channelClaim. If the client send channelExtendAndAddFunds request and at the same time the
