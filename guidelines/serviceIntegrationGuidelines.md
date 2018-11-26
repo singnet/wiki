@@ -74,20 +74,20 @@ existing AI framework service in order to implement new functionalities:
 
 - [How to write an Opencog service to SingularityNET][opencog-tutorial]
 
-## <a name="#thridparty"></a> Third-party code and models
+## <a name="#thridparty"></a> Third party code and models
 
 Before publishing a service based on third-party code or model(s), make sure
 you follow all the guidelines below.
 
-1 The service is FREE.
-1 The main documentation of the service (e.g. README.md) mentions (crystal clear)
+1. The service is FREE.
+1. The main documentation of the service (e.g. README.md) mentions (crystal clear)
 that the service is based on third-party work.
-1 The original work (code, paper, model etc) is clearly mentioned and properly
+1. The original work (code, paper, model etc) is clearly mentioned and properly
 linked in README.
-1 The authors of the original code or model(s) are clearly mentioned 
+1. The authors of the original code or model(s) are clearly mentioned 
 in README.
-1 Any licenses attached to the original work is mentioned in README.
-1 The terms of any license attached to the original work allows its use in
+1. Any licenses attached to the original work is mentioned in README.
+1. The terms of any license attached to the original work allows its use in
 SNET.
 
 See [this example][dnn-github] of third-party based service documentation which
@@ -97,13 +97,13 @@ is fully compliant with these guidelines.
 
 All the following documentation is mandatory for any service.
 
-1 **README** (see our recommended [templates][docs-templates]) describing the
+1. **README** (see our recommended [templates][docs-templates]) describing the
 structure of the repository and how to build/test the service. This is a sort
 of "developer's guide" aimed at people interested in extending or reusing the
 service.
-1 **docs/index.html** pointed by standard Github Pages describing how to use
+1. **docs/index.html** pointed by standard Github Pages describing how to use
 the service. This is the "user's guide" of your service.
-1 **LICENSE** with SNET standard license.
+1. **LICENSE** with SNET standard license.
 
 If you are extending an existing service. Follow any particular guidelines of
 the specific project and make sure you update all the aforementioned documents
