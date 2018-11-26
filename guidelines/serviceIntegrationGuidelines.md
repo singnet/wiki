@@ -23,7 +23,7 @@ AI services to the platform.
 
 - [Supported languages](#languages)
 - [AI frameworks](#frameworks)
-- [Third party code and models](#thirdparty)
+- [Third-party code and models](#thirdparty)
 - [Service documentation](#docs)
 - [Contributing to existing projects](#contributing)
 
@@ -73,7 +73,7 @@ existing AI framework service in order to implement new functionalities:
 
 - [How to write an Opencog service to SingularityNET][opencog-tutorial]
 
-## <a name="#thirdparty"></a> Third party code and models
+## <a name="thirdparty"></a> Third-party code and models
 
 Before publishing a service based on third-party code or model(s), make sure
 you follow all the guidelines below.
