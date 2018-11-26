@@ -81,9 +81,11 @@ Comments are selfexplanatory, but few clarifications migth be useful.
 ##### Functions 
 
 The following function open the new "atomic" channel, assuming that the caller is the sender.
+
 ```Solidity
 function openChannel(address  recipient, uint256 value, uint256 expiration, bytes32 groupId, address signer)
 ```
+
 This function simply create new PaymentChannel structure and add it to the channels list.
 
 The following function open the channel from the recipient side.
