@@ -89,9 +89,11 @@ function openChannel(address  recipient, uint256 value, uint256 expiration, byte
 This function simply create new PaymentChannel structure and add it to the channels list.
 
 The following function open the channel from the recipient side.
-``Solidity
+
+```Solidity
 function channelClaim(uint256 channelId, uint256 amount, uint8 v, bytes32 r, bytes32 s, bool isSendback)
 ```
+
 It should be noted that v,r,s are parts of the signature.
 The recipent should present the signature for the following message [MPEContractAdress, channelId, nonce, amount].
 It should be noted that [MPEContractAdress, channel_id, nonce] is the full ID of "atomic" channel. 
