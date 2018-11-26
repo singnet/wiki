@@ -9,12 +9,13 @@ Parameters for the service have to be passed to snet-cli in JSON format. There a
 * via JSON file
 * via stdin
 
-For example in front-to-back [example1](front-to-back-examples/example1.md#make-a-call-using-stateless-logic) we need to pass the following json as parameter for "add" method on our service:
+For example in front-to-back [example1](front-to-back-examples/example1.md#make-a-call-using-stateless-logic) we need to pass the following json as parameter for "add" method to our service:
 {"a":10,"b":32}
 
 we can use three ways
 ```bash
 # via cmpline parameter
+snet client call 0 0.1 localhost:8080 add '{"a":10,"b":32}'
 
 # via json file
 echo '{"a":10,"b":32}' > p.txt
