@@ -148,7 +148,7 @@ snet identity create snet-user key --private-key 0xc71478a6d0fe44e763649de0a0deb
 snet identity snet-user
 
 # deposit 100.1 AGI to MPE wallet
-snet client deposit 100.1
+snet client deposit 100.1 -y
 
 # open channel with our service (organization=testo service_name=tests)
 # channel with channel_id=0 should be created and initialized after this call
