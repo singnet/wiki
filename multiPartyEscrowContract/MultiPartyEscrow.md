@@ -82,7 +82,7 @@ Comments are selfexplanatory, but few clarifications migth be useful.
 
 The following function open the new "atomic" channel, assuming that the caller is the sender.
 ```Solidity
-function openChannel(address  recipient, uint256 value, uint256 expiration, uint256 replicaId, address signer)
+function openChannel(address  recipient, uint256 value, uint256 expiration, bytes32 groupId, address signer)
 ```
 This function simply create new PaymentChannel structure and add it to the channels list.
 
@@ -133,11 +133,11 @@ Formal example:
 
 Let's assume that the price for one call is 1 AGI. Also we assume that server and client perform all required validations on each call. 
 For example server check that signature is authentic, that amount is correct, that this amount doesn't exceed value of the channel, that expiration data is tolerable etc.
+We assume that REPLICA1 is from payment group with groupId=group1
 
 
-
-* CLIENT1 call: openChannel(server=SERVER1, replica=REPLICA1, value=10 AGI, expiration=expiratoin0)
-* MPE create the PaymentChanel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, replicaId=REPLICA1, value=10 AGI, nonce=0, expiration=expiration0]
+* CLIENT1 call: openChannel(recipient=SERVER1, value=10 AGI, expiration=expiration0, groupId=group1, signer=CLIENT1)
+* MPE create the PaymentChanel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, groupId=group1, value=10 AGI, nonce=0, expiration=expiration0, signer=CLIENT1]
 * MPE subtract 10 AGI from the balance of the CLIENT1 
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=0, amount=1)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=0, amount=2)
@@ -148,14 +148,14 @@ For example server check that signature is authentic, that amount is correct, th
 * SERVER1 call: channelClaim(channel_id = 0, amount=5, signature = SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=0, amount=5), is_sendback=false)
 * MPE add 5 AGI to the balance of SERVER1
 * MPE change the nonce (nonce +=1) and value (value -= 5) in the PaymentChannel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, replicaId=REPLICA1, value=5 AGI, nonce=1, expiration=expiration0]  
-* Client recieve information that channel have been reopen (either from the server either from listening the events from the blockchain)
+* Client recieve information that channel has been reopen, and nonce has been changed (see [state-less logic](MultiPartyEscrow_stateless_client.md) )
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=1)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=2)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=3)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=4)
 * Client decides to put more funds in the channel and extend it expiration datas.
 * CLEINT1 calls channelExtendAndAddFunds(channel_id=0, new_expiration = now + 1day, amount=10 AGI)
-* MPE change the value and expiration data in the PaymentChannel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, replicaId=REPLICA1, value=15 AGI, nonce=1, expiration=expiration1]
+* MPE change the value and expiration data in the PaymentChannel: [channel_id = 0, sender=CLIENT1, recipient=SERVER1, groupId=group1, value=15 AGI, nonce=1, expiration=expiration1, signer=CLIENT1]
 * MPE subtract 10 AGI from the balance of the CLIENT1
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=5)
 * CLIENT1 send to SERVER1/REPLICA1 authorization SIGNED_BY_CLIENT1(ContractAdress=MPEAdress, channel_id=0, nonce=1, amount=6)
