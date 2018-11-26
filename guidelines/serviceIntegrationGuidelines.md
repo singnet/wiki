@@ -18,13 +18,12 @@
 
 # Guidelines for service integration in SingularityNET
 
-Are you ready to contribute to SingularityNET ? We'd love to have you on board,
-and we will help you as much as we can. Here are the guidelines we'd like you
-to follow so that we can be of more help:
+These are guidelines to help SingularityNET developers to write/integrate new
+AI services to the platform.
 
 - [Supported languages](#languages)
 - [AI frameworks](#frameworks)
-- [Third party code and models](#thridparty)
+- [Third party code and models](#thirdparty)
 - [Service documentation](#docs)
 - [Contributing to existing projects](#contributing)
 
@@ -74,7 +73,7 @@ existing AI framework service in order to implement new functionalities:
 
 - [How to write an Opencog service to SingularityNET][opencog-tutorial]
 
-## <a name="#thridparty"></a> Third party code and models
+## <a name="#thirdparty"></a> Third party code and models
 
 Before publishing a service based on third-party code or model(s), make sure
 you follow all the guidelines below.
