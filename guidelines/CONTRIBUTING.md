@@ -111,7 +111,9 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
 
 ## <a name="commit"></a> Git Commit Guidelines
 
-We have rules over how our git commit messages must be formatted. Please ensure to [squash](https://help.github.com/articles/about-git-rebase/#commands-available-while-rebasing) unnecessary commits so that your commit history is clean.
+We prefer well formatted commit messages. Please try to following example 
+
+Please ensure to [squash](https://help.github.com/articles/about-git-rebase/#commands-available-while-rebasing) unnecessary commits so that your commit history is clean.
 
 ### <a name="commit-message-format"></a> Commit Message Format
 
@@ -157,7 +159,7 @@ For example, here is a good commit message:
 ```
 upgrade to Python 3.6.1
 
-upgrade the project builds to use the new Pyrhon 3.6.1,
+upgrade the project builds to use the new Python 3.6.1,
 see https://www.python.org/download/releases/
 
 Fix #1234
