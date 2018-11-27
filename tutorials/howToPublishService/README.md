@@ -1,3 +1,5 @@
+[naming-standards]: https://github.com/singnet/wiki/blob/master/doc/Naming-Standards.md
+
 # Tutorial - How to Publish a SingularityNET Service
 
 -------------------------------
@@ -61,7 +63,7 @@ Create an organization and add your key to it.
 # snet organization create ORGANIZATION_NAME
 ```
 
-Replace ORGANIZATION_NAME by a name of your choice.
+Replace ORGANIZATION_NAME by a name of your choice. Make sure you follow our [naming standardisation guidelines][naming-standards].
 
 If you want to join an existing organization (e.g. SNET), ask the owner to add your public key into it before proceeding.
 
@@ -75,7 +77,8 @@ In this tutorial we use a simple service implemented in [DNN Model Services](htt
 # git clone https://github.com/singnet/dnn-model-services.git
 # cd dnn-model-services/Services/gRPC/Basic_Template/service/
 ```
-To build the JSON configuration file, execute the following command and enter the requested information.
+To build the JSON configuration file, execute the following command and enter the requested information. Make sure you follow our [naming standardisation guidelines][naming-standards].
+
 
 ```
 # snet service metadata_init SERVICE_PROTOBUF_DIR SERVICE_DISPLAY_NAME PAYMENT_ADDRESS

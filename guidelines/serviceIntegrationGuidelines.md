@@ -11,6 +11,7 @@
 [python-tutorial]: https://github.com/singnet/wiki/tree/master/tutorials/howToWritePythonService
 [opencog-tutorial]: https://github.com/singnet/wiki/tree/master/tutorials/howToWriteOpencogService
 [service-tutorial]: https://github.com/singnet/wiki/tree/master/tutorials/howToPublishService
+[naming-standards]: https://github.com/singnet/wiki/blob/master/doc/Naming-Standards.md
 [grpc]: https://grpc.io/
 [grpc-docs]: https://grpc.io/docs/
 [opencog]: https://opencog.org/
@@ -58,6 +59,8 @@ If you already have a gRPC service, this tutorial explains how to publish it in
 SingularityNET:
 
 - [How to publish a service][service-tutorial]
+
+Make sure you follow our [naming standardisation guidelines][naming-standards].
 
 ## <a name="frameworks"></a> AI frameworks
 
