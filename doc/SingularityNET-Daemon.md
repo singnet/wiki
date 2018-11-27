@@ -22,12 +22,19 @@ The daemon supports SSL termination using either a service developer-supplied ce
 
 ## Auth
 
-Prior to invoking a service through the SingularityNET platform, a consumer must have created and funded a Job contract with the Agent contracted associated with the service. With each invocation, the request is paired with custom HTTP2 headers that indicate the address of the funded Job contract and a signature generated with the private key associated with the address that created and funded the Job contract. The daemon ensures that the funds have been successfully locked into escrow and that the signature is valid as a token to claim the funds after processing the request prior to proxying the request to the service.
-
-## Blockchain
-
-The daemon uses a blockchain identity/wallet to transact on the blockchain. This identity need not have any relation to the identity that owns the Agent contract for the service. It is important that the daemon's configured blockchain identity remains funded with ETH in order for funds to be moved from escrow to the service owner's wallet.
+Prior to invoking a service through the SingularityNET platform, a consumer must have 
+- Funded  the multiparty escrow contract 
+- Opened a payment channel with the recipient as specified by the service definition. 
+With each invocation the daemon checks 
+- That the signature is authentic
+- The payment channel has sufficient funds
+- The payment channel expiry is beyond specified threshold (to ensure that the developer can claim the accrued funds)
+Post these successful checks the request is proxied to the service.
 
 ## Configuration
 
 The daemon's behavior with respect to [service type](#supported-service-types), [SSL](#ssl), [blockchain interactions](#blockchain), etc. is configurable via a configuration file, environment variables, and executable flags. See [this](Platform-How-Tos.md#configure-singularitynet-daemon) for a description of the available configuration keys.
+
+## Payment channel state
+
+The daemon stores payment channel state in a etcdb cluster. This is detailed [here](../payment-channel/PaymentChannelStorage.md)

@@ -10,13 +10,15 @@
 ### SNET Platform
 - [Overview](doc/Overview.md)
 - [Daemon](doc/SingularityNET-Daemon.md)
+- [Multiparty Escrow](multiPartyEscrowContract/MultiPartyEscrow.md)
 - [Registry](doc/SingularityNET-Registry.md)
 - [Getting Started](doc/Getting-Started.md)
 - [Platform How-Tos](doc/Platform-How-Tos.md)
 
 ### SNET Platform Development
 
-- [Tutorial: Build and deploy SingularityNET locally](doc/Tutorial:-Build-and-deploy-SingularityNET-locally.md)
+- [Tutorial: Build and deploy SingularityNET locally](multiPartyEscrowContract/front-to-back-examples/Build-and-deploy-SingularityNET-locally.md)
+- [Tutorial: Build, publish and run a sample service on the SingularityNET platform](wiki/multiPartyEscrowContract/front-to-back-examples/example1.md)
 
 ## Welcome to the SingularityNET Wiki
 
@@ -39,24 +41,18 @@ the network.
 
 The SingularityNET platform and network can be broken down into several core components:
 
-* **Agents:** An Agent is an AI service that has been published onto the SingularityNET network. It has an 
-associated Agent contract that manages pricing and exposes metadata such as the service endpoint.
-End users interact with the Agent contract on-chain to purchase access to a service using 
-SingularityNET's native AGI token.
+* **Agents:** An Agent is an AI service that has been published onto the SingularityNET network. The agent definition is stored on-chain in the registry with metadata such as endpoints stored off-chain in IPFS.
 
 * **Registry**: AI services are published onto a publicly accessible central registry on the
 blockchain. The registry maintains a list of active Agents on the network that expose services
 which can be called using the AGI token.
 
+* **Multiparty escrow**: A smart contract that facilitates transactions between users and AI service developers. It provides a wallet functionality (deposit and withdraw funds) as well as uni-directional payment channels between users and AI service developers enabling users to pay for service invocations
+
 * **SNET Daemon:** An AI service developer exposes their service to the network by running
 the SNET Daemon alongside their service. The SNET Daemon interacts with the blockchain to 
 facilitate authorization and payment for services and acts as a passthrough for making API
 calls to the service.
-
-* **Escrow:** Currently exposed as a *Job* contract on the blockchain, AGI funds are held 
-in escrow during interaction between an end-user and an Agent The escrow is funded before a
-service can be called and funds are not released from escrow until the services have been
-delivered.
 
 * **SNET DApp:** The SingularityNET DApp is a front-end for exploring available AI services 
 and inetracting with them through a web-UI. 
