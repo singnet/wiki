@@ -71,7 +71,7 @@ and professional software engineering techniques.
 There are tutorials with step-by-step instructions on how to extend the
 existing AI framework service in order to implement new functionalities:
 
-- [How to write an Opencog service to SingularityNET][opencog-tutorial]
+- [How to write an Opencog service for SingularityNET][opencog-tutorial]
 
 ## <a name="thirdparty"></a> Third-party code and models
 
