@@ -111,7 +111,7 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
 
 ## <a name="commit"></a> Git Commit Guidelines
 
-We prefer well formatted commit messages. Please try to following example 
+We prefer well formatted commit messages. Please try the following example.
 
 Please ensure to [squash](https://help.github.com/articles/about-git-rebase/#commands-available-while-rebasing) unnecessary commits so that your commit history is clean.
 
