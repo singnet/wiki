@@ -3,7 +3,7 @@
 [services-readme]: https://github.com/singnet/opencog-services/blob/master/README.md
 [contribution-guidelines]: https://github.com/singnet/wiki/blob/master/guidelines/CONTRIBUTING.md
 
-# Tutorial - How to write an Opencog service to SingularityNET
+# Tutorial - How to write an Opencog service for SingularityNET
 
 -------------------------------
 
@@ -158,8 +158,14 @@ load new modules, define several global variables or helper functions etc.
 The only requisite is that you nned to define a function with the exact name of the
 command expecting a list of arguments as the only parameter.
 
-**Important:** Anything the command send to `stdout` (e.g. by calling the 
-function `(display)`) will be considered as part of the output.
+**Important notes:** 
+
+- Anything the command send to `stdout` (e.g. by calling the function
+  `(display)`) will be considered as part of the output.
+- Any arguments starting with `http:` or `https:` **will not** be passed to
+  the command. The target file will be fetched instead (it's supposed to be in
+  [Atomese][atomese]) and fed into the AtomSpace. If you need to pass an URL to
+  the command, you can quote it or prefix it in some other way.
 
 So we're done with the Scheme command.
 
