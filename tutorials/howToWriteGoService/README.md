@@ -7,7 +7,7 @@ _Before following this tutorial, make sure you've installed_
 * _Docker (https://www.docker.com/)_
 * _Metamask (https://metamask.io)_
 
-_You will need a private-public key pair to register your service in SNET. Generate them in Metamask before you start this turorial._
+_You will need a private-public key pair to register your service in SNET. Generate them in Metamask before you start this tutorial._
 
 -------------------------------
 
@@ -26,7 +26,7 @@ $ docker build --build-arg language=go -t snet_go_service https://github.com/sin
 $ docker run -p 7000:7000 -ti snet_go_service bash
 ```
 
-From this point we follow the turorial in the Docker container's prompt.
+From this point we follow the tutorial in the Docker container's prompt.
 
 ```
 # cd wiki/tutorials/howToWriteGoService
@@ -37,13 +37,15 @@ From this point we follow the turorial in the Docker container's prompt.
 Create the skeleton structure for your service's project
 
 ```
-# ./create_project.sh PROJECT_NAME SERVICE_NAME SERVICE_PORT
+# ./create_project.sh PROJECT_NAME ORGANIZATION_NAME SERVICE_NAME SERVICE_PORT
 ```
 
 `PROJECT_NAME` is a short tag for your project. It will be used to name
 project's directory and as a namespace tag in the .proto file.
 
-`SERVICE_NAME` is...
+`ORGANIZATION_NAME` is the name of an organization that you are a member or owner. 
+
+`SERVICE_NAME` is the name of your service.
 
 `SERVICE_PORT` is the port number (in localhost) the service will listen to.
 
@@ -55,10 +57,10 @@ In this tutorial we'll implement a service with two methods:
 * int div(int a, int b)
 * string check(int a)
 
-So we'll use this command line to create project's skeleton and go to its folder
+So we'll use this command line to create project's skeleton
 
 ```
-# ./create_project.sh tutorial math-operations 7070
+# ./create_project.sh tutorial snet math-operations 7070
 # cd /opt/singnet/go/src/tutorial
 ```
 
@@ -184,138 +186,71 @@ the installation directory) or outside the container if you have Go gRPC librari
 
 The next steps in this tutorial will publish the service in SingularityNET.
 
-## Step 8 (optional if you already have enough AGI and ETH tokens)
+## Step 8
 
-You need some AGI and ETH tokens. You can get then for free (using your github
-account) here:
+Now you must follow the [howToPublishService](../howToPublishService/README.md)
+tutorial to publish this service or use our script (next step).
 
-* AGI: https://faucet.singularitynet.io/
-* ETH: https://faucet.kovan.network/
+You'll also need a `SNET CLI` identity (check step 3 from [howToPublishService](../howToPublishService/README.md#step-3)).
 
 ## Step 9
 
-Create an "alias" for your private key.
+First, make sure you killed the `server` process started in Step 7.
 
-```
-# snet identity create MY_ID_NAME KEY_TYPE
-```
-
-Replace `MY_ID_NAME` by an id to identify your key in the `SNET-CLI`. This id
-will not be seen by anyone. It's just a way to make it easier for you to refer
-to your private key (you may have many, btw) in following 'snet' commands. This
-alias is kept locally in the container and will vanish when it's shutdown.
-`KEY_TYPE` can be either
-
-* key
-* rpc
-* mnemonic
-* ledger
-* trezor
-
-You may find detailed information regarding key types (and other `SNET-CLI`
-features) in https://github.com/singnet/snet-cli
-
-In this tutorial we'll use `KEY_TYPE == key`. Enter your private key when
-prompted (in `Metamask`: menu -> details -> export private key)
-
-## Step 10 (optional if you already have an organization) 
-
-Create an organization and add your key to it.
-
-```
-# snet organization create ORGANIZATION_NAME PUBLIC_KEY
-```
-
-Replace `ORGANIZATION_NAME` by a name of your choice and replace `PUBLIC_KEY`
-by the public key associated with the private key you used previously.
-
-If you want to join an existing organization (e.g. SNET), ask the owner to add
-your key before proceeding. In this tutorial we assume you'll use SNET.
-
-## Setp 11
-
-Edit a JSON configuration file for your service.  We already have a valid
-`service.json` in project's folder looking like this:
-
-```JSON
-{
-    "name": "math-operations",
-    "service_spec": "service_spec/",
-    "organization": "SNET",
-    "path": "",
-    "price": 0,
-    "endpoint": "http://localhost:7000",
-    "tags": [
-        "[]"
-    ],
-    "metadata": {
-        "description": ""
-    }
-}
-``` 
-
-Anyway we'll change it to add some useful information in `tags` and `description`.
-
-```JSON
-{
-    "name": "math-operations",
-    "service_spec": "service_spec/",
-    "organization": "SNET",
-    "path": "",
-    "price": 0,
-    "endpoint": "http://localhost:7000",
-    "tags": ["tutorial", "math-operations", "basic"],
-    "metadata": {
-        "description": "A tutorial Go service"
-    }
-}
-``` 
-
-You could also use `SNET-CLI` build the JSON configuration file
-using `snet service init` and answering the prompted questions.
-
-## Step 12
-
-First, make sure you killed the `server` proccess started in Step 7. Then
+Then
 publish and start your service:
 
 ```
-# ./publishAndStartService.sh PRIVATE_KEY
+# ./publishAndStartService.sh PAYMENT_ADDRESS
 ```
 
-Replace `PRIVATE_KEY` by your private key (in `Metamask`: menu ->
-details -> export private key).  This will start the SNET Daemon and your
-service. If everything goes well you will see the blockchain trasaction logs
-and then the following 3 messages (respectively from: SNET-CLI, your service and
-SNET Daemon):
+Replace `PAYMENT_ADDRESS` by your public key (wallet).
+
+Example:
 
 ```
-Service published!
+# ./publishAndStartService.sh 0xA6E06cF37110930D2906e6Ae70bA6224eDED917B
+```
+
+This will start the `SNET Daemon` and your service. If everything goes well you will 
+see the blockchain transaction logs and then the following messages 
+(respectively from: your service and `SNET Daemon`):
+
+```
+[blockchain log]
 Server listening on 0.0.0.0:7070
-DEBU[0001] starting daemon                              
+[daemon initial log]
+INFO[0002] Blockchain is enabled: instantiate payment validation interceptor 
+INFO[0002]                                               PaymentChannelStorageClient="&{ConnectionTimeout:5s RequestTimeout:3s Endpoints:[http://127.0.0.1:2379]}"
+INFO[0002] Default payment handler registered            defaultPaymentType=escrow
+DEBU[0002] starting daemon                              
 ```
 
 You can double check if it has been properly published using
 
 ```
-# snet organization list-services SNET
+# snet organization list-services snet
 ```
 
 Optionally you can un-publish the service
 
 ```
-# snet service delete SNET math-operations
+# snet service delete snet math-operations
 ```
 
 Actually, since this is just a tutorial, you are expected to un-publish your
 service as soon as you finish the tests.
 
-Other `snet` commands and options (as well as their documentation) can be found here: 
-https://github.com/singnet/snet-cli
+Other `snet` commands and options (as well as their documentation) can be found 
+[here](https://github.com/singnet/snet-cli).
 
-## Step 13
+## Step 10
 
-You can test your service making requests in command line
+You can test your service making requests in command line:
+
+The `testServiceRequest.sh` script is set to use channel id `0`, if your
+`SNET CLI` identity already had opened previous channels, you'll have to
+set channel id manually at.
 
 ```
 # ./testServiceRequest.sh 12 4
@@ -324,8 +259,8 @@ You can test your service making requests in command line
         v: 3
 ```
 
-That's it. Remember to delete your service as explained in Step 12.
+That's it. Remember to delete your service as explained in Step 9.
 
 ```
-# snet service delete -y SNET math-operations
+# snet service delete snet math-operations
 ```

@@ -13,8 +13,8 @@ using grpc::Status;
 
 // PROTO_TYPES
 using __PROJECT__::ServiceDefinition;
-using __PROJECT__::Numbers;
-using __PROJECT__::Result;
+using __PROJECT__::Input;
+using __PROJECT__::Output;
 
 class ServiceClient {
 
