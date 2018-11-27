@@ -8,17 +8,14 @@
 - [Resources](doc/Resources.md)
 
 ### SNET Platform
-- [Overview](doc/Overview.md)
 - [Daemon](doc/SingularityNET-Daemon.md)
 - [Multiparty Escrow](multiPartyEscrowContract/MultiPartyEscrow.md)
 - [Registry](doc/SingularityNET-Registry.md)
-- [Getting Started](doc/Getting-Started.md)
-- [Platform How-Tos](doc/Platform-How-Tos.md)
 
 ### SNET Platform Development
 
 - [Tutorial: Build and deploy SingularityNET locally](multiPartyEscrowContract/front-to-back-examples/Build-and-deploy-SingularityNET-locally.md)
-- [Tutorial: Build, publish and run a sample service on the SingularityNET platform](wiki/multiPartyEscrowContract/front-to-back-examples/example1.md)
+- [Tutorial: Build, publish and run a sample service on the SingularityNET platform](multiPartyEscrowContract/front-to-back-examples/example1.md)
 
 ## Welcome to the SingularityNET Wiki
 
@@ -71,9 +68,6 @@ Designs for our production platform and associated development roadmap will also
 wiki as they are finalized.
 
 ### Find out more 
-
-To get started with the SingularityNET platform review the [Overview](doc/Overview.md) and 
-[Getting Started](doc/Getting-Started.md) pages.
 
 Further [Resources](doc/Resources.md),
 including information on how to acquire AGI tokens.

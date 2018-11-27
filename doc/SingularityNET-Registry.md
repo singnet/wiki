@@ -19,7 +19,7 @@ An Organization is an umbrella for Services to be grouped together and is the to
 An Organization registration record has a name, an owner address, a collection of member addresses, a collection of Services, and a collection of Type Repositories. Services and Type Repositories registered under a given Organization are said to be owned by that Organization. The list of members is a primitive access management structure; members of an organization can do everything except change the organization owner and delete the organization.
 
 ### Service 
-A Service represents a single AI service and contains the necessary information for any consumer to call that AI service. A Service registration record contains a name, IPFS hash and a collection of tags. The name is an identifier for discoverability, the IPFS hash is the link to the metadata file on IFS and the tags exist for discoverability. DApps and smart contracts can use the `listServicesForTag` view function to discover Services.
+A Service represents a single AI service and contains the necessary information for any consumer to call that AI service. A Service registration record contains a name, IPFS hash and a collection of tags. The name is an identifier for discoverability, the IPFS hash is the link to the metadata file on IPFS and the tags exist for discoverability. DApps and smart contracts can use the `listServicesForTag` view function to discover Services.
 
 ### Service Metadata
 The service metadata is stored off chain in IPFS. This is described in detail [here](../multiPartyEscrowContract/MPEServiceMetadata.md)
