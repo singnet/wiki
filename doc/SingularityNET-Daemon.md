@@ -25,6 +25,7 @@ The daemon supports SSL termination using either a service developer-supplied ce
 Prior to invoking a service through the SingularityNET platform, a consumer must have 
 - Funded  the multiparty escrow contract 
 - Opened a payment channel with the recipient as specified by the service definition. 
+
 With each invocation the daemon checks 
 - That the signature is authentic
 - The payment channel has sufficient funds
