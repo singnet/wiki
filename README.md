@@ -16,8 +16,8 @@
 
 - Tutorials 
 	- [Build and deploy SingularityNET locally](multiPartyEscrowContract/front-to-back-examples/Build-and-deploy-SingularityNET-locally.md)
-	- [Build, publish and run a sample service on the SingularityNET platform - Example 1](tutorials/howToPublishService)
-	- [Build, publish and run a sample service on the SingularityNET platform - Example 2](multiPartyEscrowContract/front-to-back-examples/example1.md)
+	- [Build, publish and run a sample service on the SingularityNET platform - Example 1](multiPartyEscrowContract/front-to-back-examples/example1.md)
+	- [Build, publish and run a sample service on the SingularityNET platform - Example 2](tutorials/howToPublishService)
 	- [Build a service in C++](tutorials/howToWriteCPPService)
 	- [Build a service in Go](tutorials/howToWriteGoService)
 	- [Build a service in Java](tutorials/howToWriteJavaService)
