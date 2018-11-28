@@ -1,3 +1,5 @@
+[naming-standards]: https://github.com/singnet/wiki/blob/master/doc/Naming-Standards.md
+
 # Tutorial - How to Publish a SingularityNET Service
 
 -------------------------------
@@ -7,7 +9,7 @@ _Before following this tutorial, make sure you've installed_
 * _Docker (https://www.docker.com/)_
 * _Metamask (https://metamask.io)_
 
-_You will need a private-public key pair to register your service in SNET. Generate them in Metamask before you start this turorial._
+_You will need a private-public key pair to register your service in SNET. Generate them in Metamask before you start this tutorial._
 
 -------------------------------
 
@@ -35,7 +37,7 @@ You need some AGI and ETH tokens. You can get then for free using your github ac
 
 ## Step 3 
 
-From this point we follow the turorial in the Docker container's prompt.
+From this point we follow the tutorial in the Docker container's prompt.
 
 Create an "alias" for your private key.
 
@@ -61,7 +63,7 @@ Create an organization and add your key to it.
 # snet organization create ORGANIZATION_NAME
 ```
 
-Replace ORGANIZATION_NAME by a name of your choice.
+Replace ORGANIZATION_NAME by a name of your choice. Make sure you follow our [naming standardisation guidelines][naming-standards].
 
 If you want to join an existing organization (e.g. SNET), ask the owner to add your public key into it before proceeding.
 
@@ -75,32 +77,115 @@ In this tutorial we use a simple service implemented in [DNN Model Services](htt
 # git clone https://github.com/singnet/dnn-model-services.git
 # cd dnn-model-services/Services/gRPC/Basic_Template/service/
 ```
-To build the JSON configuration file, execute the following command and enter the requested information.
+To build the JSON configuration file, execute the following command and enter the requested information. Make sure you follow our [naming standardisation guidelines][naming-standards].
+
 
 ```
-# snet service init
+# snet service metadata_init SERVICE_PROTOBUF_DIR SERVICE_DISPLAY_NAME PAYMENT_ADDRESS
 ```
 
-The questions are (hopefully) self-explanatory. Defaults are safe except for:
+`SERVICE_PROTOBUF_DIR`: The folder where your service's `.proto` file is.
 
-* Organization (see step 4)
-* Endpoint (the ip:port address of your service)
+For example:
+```
+# snet service metadata_init service_spec/ basic-service-name 0xA6E06cF37110930D2906e6Ae70bA6224eDED917B
+```
+
+With these parameters, the JSON must looks like:
+
+```JSON
+{
+    "version": 1,
+    "display_name": "basic-service-name",
+    "encoding": "grpc",
+    "service_type": "grpc",
+    "payment_expiration_threshold": 40320,
+    "model_ipfs_hash": "QmSkiwenyYUMt1rCgSboH9eiSSdeMDi1kVPXZvKScAZQyx",
+    "mpe_address": "0xdd4292864063d0DA1F294AC65D74d55a44F4766C",
+    "pricing": {},
+    "groups": [
+        {
+            "group_name": "default_group",
+            "group_id": "gbXRAIn9XB8LMocMi8xZlFd/nNrVoBWUbeTVqTEHZXE=",
+            "payment_address": "0xA6E06cF37110930D2906e6Ae70bA6224eDED917B"
+        }
+    ],
+    "endpoints": []
+}
+```
+
+Now, lets set a fixed price for your `basic-service-name`:
+
+```
+# snet service metadata_set_fixed_price PRICE_IN_AGI
+```
+
+Remember that 1 AGI = 10^8 COGS, so lets set the price 1 COG.
+
+```
+# snet service metadata_set_fixed_price 0.00000001
+```
+
+Then, lets set the endpoint where your `SNET Daemon` and `service` will be listening to:
+
+```
+# snet service metadata_add_endpoints IP:PORT
+```
+
+For example:
+```
+# snet service metadata_add_endpoints http://54.203.198.53:7000
+```
+
+Our service's JSON configuration now looks like:
+
+```json
+{
+    "version": 1,
+    "display_name": "basic-service-name",
+    "encoding": "grpc",
+    "service_type": "grpc",
+    "payment_expiration_threshold": 40320,
+    "model_ipfs_hash": "QmSkiwenyYUMt1rCgSboH9eiSSdeMDi1kVPXZvKScAZQyx",
+    "mpe_address": "0xdd4292864063d0DA1F294AC65D74d55a44F4766C",
+    "pricing": {
+        "price_model": "fixed_price",
+        "price_in_cogs": 1
+    },
+    "groups": [
+        {
+            "group_name": "default_group",
+            "group_id": "gbXRAIn9XB8LMocMi8xZlFd/nNrVoBWUbeTVqTEHZXE=",
+            "payment_address": "0xA6E06cF37110930D2906e6Ae70bA6224eDED917B"
+        }
+    ],
+    "endpoints": [
+        {
+            "group_name": "default_group",
+            "endpoint": "http://54.203.198.53:7000"
+        }
+    ]
+}
+```
 
 ## Step 6
-
-Create the 'service_spec' folder (or anything else you've specified in your JSON configuration file) and put the .proto file inside it.
-
-In our tutorial the .proto is already in place
-
-## Step 7
 
 Publish your service
 
 ```
-# snet service publish
+# snet service publish ORGANIZATION_NAME SERVICE_NAME
 ```
 
-Check if it has been properly published
+`ORGANIZATION_NAME`: The name of the organization you've create in step 4.
+
+`SERVICE_NAME`: The name that you want to registry your service with. Can be the same as
+`SERVICE_DISPLAY_NAME` or different.
+
+```
+# snet service publish snet basic-service
+```
+
+Check if your service has been properly published
 
 ```
 # snet organization list-services ORGANIZATION_NAME
@@ -112,33 +197,37 @@ Optionally you can un-publish the service
 # snet service delete ORGANIZATION_NAME SERVICE_NAME
 ```
 
-## Step 8
+## Step 7
 
-Running the service using SNET Daemon
+Running the service and `SNET Daemon`
 
-In the service folder, create a dir named 'config' and a file named 'snetd_[SERVICE_NAME]_config.json' according to this template
+In the service folder, create a file named `snetd.config.json` according to this template
 
 ```JSON
 {
-    "DAEMON_TYPE": "grpc",
-    "DAEMON_LISTENING_PORT": "7000",
-    "BLOCKCHAIN_ENABLED": true,
-    "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
-    "AGENT_CONTRACT_ADDRESS": "YOUR_AGENT_ADDRESS",
-    "SERVICE_TYPE": "grpc",
-    "PASSTHROUGH_ENABLED": true,
-    "PASSTHROUGH_ENDPOINT": "http://localhost:7000",
-    "LOG_LEVEL": 10,
-    "PRIVATE_KEY": "YOUR_PRIVATE_KEY"
+   "PRIVATE_KEY": "1000000000000000000000000000000000000000000000000000000000000000",
+   "DAEMON_LISTENING_PORT": 7000,
+   "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
+   "PASSTHROUGH_ENABLED": true,
+   "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
+   "REGISTRY_ADDRESS_KEY": "0x2e4b2f2b72402b9b2d6a7851e37c856c329afe38",
+   "DAEMON_END_POINT": "http://54.203.198.53:7000",
+   "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
+   "ORGANIZATION_NAME": "snet",
+   "SERVICE_NAME": "basic-service",
+   "LOG": {
+   "LEVEL": "debug",
+   "OUTPUT": {
+       "TYPE": "stdout"
+       }
+   }
 }
 ```
 
+Now run the service (that will run and instance of `SNET Daemon`) from the same path where `snet.config.json` is:
+
 ```
-# cd ..
-# mkdir config
-# vi config/snetd_[SERVICE_NAME]_config.json
-# sh buildproto.sh
-# python3.6 run_basic_service.py --daemon-config config/
+# python3.6 run_basic_service.py
 ```
 
 At this point your service should be up and running. You can test it by making
@@ -154,14 +243,160 @@ $ docker exec -it snet_service bash
 Inside the Docker container:
 
 ```
-# cd /root/dnn-model-services/Services/gRPC/Basic_Template
+# cd dnn-model-services/Services/gRPC/Basic_Template
 # python3.6 test_call_basic_service.py
 ```
 
-Or you can make requests trough SingularityNET
+Or you can make requests through `SingularityNET`:
+
+- Check your wallet's funds:
 
 ```
-# snet set current_agent_at YOUR_AGENT_ADDRESS
-# snet client call add '{"a":6,"b":4}'
+# snet client balance
 ```
 
+- Deposit funds (1 COG) into MultiPartyEscrow(MPE) contract:
+
+```
+# snet client deposit 0.00000001
+```
+
+- Open a payment channel to your service:
+```
+# snet client open_init_channel_registry ORGANIZATION_NAME SERVICE_NAME AMOUNT_IN_AGI EXPIRATION_BLOCK_NUMBER
+```
+
+- To check the current `BLOCK_NUMBER`:
+
+```
+# snet client block_number
+```
+
+For example:
+
+```
+# snet client open_init_channel_registry snet basic-service 0.00000001 11000000
+```
+
+- Now, you can check your channels:
+
+```
+# snet client print_all_channels
+```
+
+##### From now on, the `SNET Daemon` must be running!
+
+- You can inspect a channel state (by `id`):
+
+```
+# snet client get_channel_state CHANNEL_ID SERVICE_ENDPOINT
+```
+
+Example:
+
+```
+# snet client get_channel_state 0 54.203.198.53:7000
+```
+
+- Finally, you can call your service with:
+
+```
+# snet client call CHANNEL_ID PRICE_IN_AGI SERVICE_ENDPOINT SERVICE_METHOD SERVICE_JSON_PARAMS
+```
+
+Example (for `endpoint` just use `IP:PORT`):
+
+```
+# snet client call 0 0.00000001 54.203.198.53:7000 mul '{"a":12,"b":7}'
+```
+
+- Treasurer:
+
+As the owner of this service you have the right to claim all AGIs that were
+spent with it.
+
+To claim these AGIs you must use the `SNET Treasurer` via `SNET Daemon`.
+
+- First, set a `snetd.config.json` in a different folder (i.e. `treasurer/`)
+
+```
+# cd treasurer
+# cat snetd.config.json
+{
+   "PRIVATE_KEY": "PRIVATE_KEY_FROM_PAYMENT_ADDRESS",
+   "DAEMON_LISTENING_PORT": 7000,
+   "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
+   "PASSTHROUGH_ENABLED": true,
+   "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
+   "REGISTRY_ADDRESS_KEY": "0x2e4b2f2b72402b9b2d6a7851e37c856c329afe38",
+   "DAEMON_END_POINT": "http://54.203.198.53:7000",
+   "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
+   "ORGANIZATION_NAME": "snet",
+   "SERVICE_NAME": "basic-service",
+   "LOG": {
+       "LEVEL": "debug",
+       "OUTPUT": {
+          "TYPE": "stdout"
+          }
+   }
+}
+```
+
+The `PRIVATE_KEY_FROM_PAYMENT_ADDRESS` must be related to `0xA6E06cF37110930D2906e6Ae70bA6224eDED917B`
+in our example.
+
+Now run the `SNET Daemon` to list all channels that were created to call your service:
+
+```
+# snetd list channels
+INFO[0000] Cobra initialized                            
+INFO[0000] Using configuration file                      configFile=snetd.config.json
+INFO[0000]                                               PaymentChannelStorageClient="&{ConnectionTimeout:5s RequestTimeout:3s Endpoints:[http://127.0.0.1:2379]}"
+0: {
+ChannelID: 0, 
+Nonce: 0, 
+State: Open, 
+Sender: 0xFF2a327ed1Ca40CE93F116C5d6646b56991c0ddE, 
+Recipient: 0xA6E06cF37110930D2906e6Ae70bA6224eDED917B, 
+GroupId: [102 246 250 169 115 225 21 99 128 252 113 211 110 41 224 185 246 243 157 8 53 185 14 10 47 225 235 251 74 51 189 17], 
+FullAmount: 450, 
+Expiration: 11000000, 
+AuthorizedAmount: 180, 
+Signature: jzVh5QoRIiiLH/RKH0GHvxMNRcLquVOZQE2ZFmUiYAsPsr+pIap+YERI7zw+BQ2d/ofs4Gl8J6u2SwTxN8rblRs=
+}
+```
+
+The output shows that sender `0xFF2a327ed1Ca40CE93F116C5d6646b56991c0ddE` has already spent
+`180` COGs from the total amount `450` COGs with this service.
+
+- So if we claim this channel right now, we'll be able to get these `180` COGs.
+
+```
+# snetd claim --channel-id 0
+[Daemon log]
+INFO[0001] Transaction finished successfully             amount=180 channelId=9 isSendBack=false signature="jzVh5QoRIiiLH/RKH0GHvxMNRcLquVOZQE2ZFmUiYAsPsr+pIap+YERI7zw+BQ2d/ofs4Gl8J6u2SwTxN8rblRs=" timeout=5s
+```
+
+- Then you can check your balance to be sure that these `180` COGs are now into your MultiPartyEscrow(`MPE`):
+
+```
+# snet client balance --account 0xA6E06cF37110930D2906e6Ae70bA6224eDED917B
+    account: 0xA6E06cF37110930D2906e6Ae70bA6224eDED917B
+    ETH: **********
+    AGI: 0.00000000
+    MPE: 0.00000180
+```
+
+- The last thing you should do is withdraw this amount from `MPE` to your private wallet:
+
+```
+# snet client withdraw 0.00000180
+[blockchain transaction]
+# snet client balance
+    account: 0xA6E06cF37110930D2906e6Ae70bA6224eDED917B
+    ETH: **********
+    AGI: 0.00000180
+    MPE: 0.00000000
+```
+
+For more information about the `SNET MultiPartyEscrow` check this [link](https://github.com/singnet/wiki/tree/master/multiPartyEscrowContract). 
