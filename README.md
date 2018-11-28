@@ -21,8 +21,8 @@
 	- [Build a service in C++](tutorials/howToWriteCPPService)
 	- [Build a service in Go](tutorials/howToWriteGoService)
 	- [Build a service in Java](tutorials/howToWriteJavaService)
-	- [Build an Opencog service](tutorials/howToWriteOpencogService)
 	- [Build a service in Python](tutorials/howToWritePythonService)
+	- [Build an Opencog service](tutorials/howToWriteOpencogService)	
 
 ## Welcome to the SingularityNET Wiki
 
