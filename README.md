@@ -14,8 +14,15 @@
 
 ### SNET Platform Development
 
-- [Tutorial: Build and deploy SingularityNET locally](multiPartyEscrowContract/front-to-back-examples/Build-and-deploy-SingularityNET-locally.md)
-- [Tutorial: Build, publish and run a sample service on the SingularityNET platform](multiPartyEscrowContract/front-to-back-examples/example1.md)
+- Tutorials 
+-- [Build and deploy SingularityNET locally](multiPartyEscrowContract/front-to-back-examples/Build-and-deploy-SingularityNET-locally.md)
+-- [Build, publish and run a sample service on the SingularityNET platform - Example 1](tutorials/howToPublishService)
+-- [Build, publish and run a sample service on the SingularityNET platform - Example 2](multiPartyEscrowContract/front-to-back-examples/example1.md)
+-- [Build a service in C++](tutorials/howToWriteCPPService)
+-- [Build a service in Go](tutorials/howToWriteGoService)
+-- [Build a service in Java](tutorials/howToWriteJavaService)
+-- [Build an Opencog service](tutorials/howToWriteOpencogService)
+-- [Build a service in Python](tutorials/howToWritePythonService)
 
 ## Welcome to the SingularityNET Wiki
 
