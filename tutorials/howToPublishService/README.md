@@ -45,7 +45,10 @@ Create an "alias" for your private key.
 # snet identity create MY_ID_NAME KEY_TYPE
 ```
 
-Replace MY_ID_NAME by an id to identify your key in the SNET-CLI. This id will not be seen by anyone. It's just a way to make it easier for you to refer to your private key (you may have many, btw) in following 'snet' commands. This alias is kept locally in the container and will vanish when it's shutdown. KEY_TYPE can be either
+Replace `MY_ID_NAME` by an id to identify your key in the `SNET CLI`. 
+This id will not be seen by anyone. 
+It's just a way to make it easier for you to refer to your private key (you may have many, btw) in following `snet` commands. 
+This alias is kept locally in the container and will vanish when it's shutdown. `KEY_TYPE` can be either
 
 * key
 * rpc
@@ -53,7 +56,7 @@ Replace MY_ID_NAME by an id to identify your key in the SNET-CLI. This id will n
 * ledger
 * trezor
 
-In this tutorial we'll use KEY_TYPE == key. Enter your private key when prompted.
+In this tutorial we'll use `KEY_TYPE` == `key`. Enter your private key when prompted.
 
 ## Step 4 (optional if you already have an organization) 
 
@@ -63,9 +66,9 @@ Create an organization and add your key to it.
 # snet organization create ORGANIZATION_NAME
 ```
 
-Replace ORGANIZATION_NAME by a name of your choice. Make sure you follow our [naming standardisation guidelines][naming-standards].
+Replace `ORGANIZATION_NAME` by a name of your choice. Make sure you follow our [naming standardisation guidelines][naming-standards].
 
-If you want to join an existing organization (e.g. SNET), ask the owner to add your public key into it before proceeding.
+If you want to join an existing organization (e.g. `snet`), ask the owner to add your public key into it before proceeding.
 
 ## Step 5
 
@@ -77,8 +80,7 @@ In this tutorial we use a simple service implemented in [DNN Model Services](htt
 # git clone https://github.com/singnet/dnn-model-services.git
 # cd dnn-model-services/Services/gRPC/Basic_Template/service/
 ```
-To build the JSON configuration file, execute the following command and enter the requested information. Make sure you follow our [naming standardisation guidelines][naming-standards].
-
+To build the JSON configuration file, execute the following command and enter the requested information.
 
 ```
 # snet service metadata_init SERVICE_PROTOBUF_DIR SERVICE_DISPLAY_NAME PAYMENT_ADDRESS
@@ -93,7 +95,7 @@ For example:
 
 With these parameters, the JSON must looks like:
 
-```JSON
+```
 {
     "version": 1,
     "display_name": "basic-service-name",
@@ -139,7 +141,7 @@ For example:
 
 Our service's JSON configuration now looks like:
 
-```json
+```
 {
     "version": 1,
     "display_name": "basic-service-name",
@@ -201,28 +203,59 @@ Optionally you can un-publish the service
 
 Running the service and `SNET Daemon`
 
-In the service folder, create a file named `snetd.config.json` according to this template
+In the service folder, create a file named `snetd.config.json` according to this template:
 
-```JSON
+```
 {
    "PRIVATE_KEY": "1000000000000000000000000000000000000000000000000000000000000000",
-   "DAEMON_LISTENING_PORT": 7000,
+   "DAEMON_LISTENING_PORT": DAEMON_PORT,
+   "DAEMON_END_POINT": "DAEMON_HOST:DAEMON_PORT",
    "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
-   "PASSTHROUGH_ENABLED": true,
-   "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
-   "REGISTRY_ADDRESS_KEY": "0x2e4b2f2b72402b9b2d6a7851e37c856c329afe38",
-   "DAEMON_END_POINT": "http://54.203.198.53:7000",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
-   "ORGANIZATION_NAME": "snet",
-   "SERVICE_NAME": "basic-service",
+   "REGISTRY_ADDRESS_KEY": "0x2e4b2f2b72402b9b2d6a7851e37c856c329afe38",
+   "PASSTHROUGH_ENABLED": true,
+   "PASSTHROUGH_ENDPOINT": "SERVICE_GRPC_HOST:SERVICE_GRPC_PORT",  
+   "ORGANIZATION_NAME": "ORGANIZATION_NAME",
+   "SERVICE_NAME": "SERVICE_NAME",
    "LOG": {
-   "LEVEL": "debug",
-   "OUTPUT": {
-       "TYPE": "stdout"
-       }
+       "LEVEL": "debug",
+       "OUTPUT": {
+            "TYPE": "stdout"
+           }
    }
 }
 ```
+
+For our example, replace tags with these values:
+
+- `DAEMON_PORT`: 7000
+- `DAEMON_HOST:DAEMON_PORT`: http://54.203.198.53:7000
+- `SERVICE_GRPC_HOST:SERVICE_GRPC_PORT`: http://localhost:7003
+- `ORGANIZATION_NAME`: snet
+- `SERVICE_NAME`: basic-service
+
+```
+{
+   "PRIVATE_KEY": "1000000000000000000000000000000000000000000000000000000000000000",
+   "DAEMON_LISTENING_PORT": 7000,
+   "DAEMON_END_POINT": "http://54.203.198.53:7000",
+   "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
+   "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
+   "REGISTRY_ADDRESS_KEY": "0x2e4b2f2b72402b9b2d6a7851e37c856c329afe38",
+   "PASSTHROUGH_ENABLED": true,
+   "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
+   "ORGANIZATION_NAME": "snet",
+   "SERVICE_NAME": "basic-service",
+   "LOG": {
+       "LEVEL": "debug",
+       "OUTPUT": {
+              "TYPE": "stdout"
+           }
+   }
+}
+```
+
+Attention to `PRIVATE_KEY`, it must have this value to `SNET Daemon` be able to run without error. 
 
 Now run the service (that will run and instance of `SNET Daemon`) from the same path where `snet.config.json` is:
 
@@ -255,7 +288,7 @@ Or you can make requests through `SingularityNET`:
 # snet client balance
 ```
 
-- Deposit funds (1 COG) into MultiPartyEscrow(MPE) contract:
+- Deposit funds (1 COG) into MultiPartyEscrow (`MPE`) contract:
 
 ```
 # snet client deposit 0.00000001
@@ -317,7 +350,37 @@ spent with it.
 
 To claim these AGIs you must use the `SNET Treasurer` via `SNET Daemon`.
 
-- First, set a `snetd.config.json` in a different folder (i.e. `treasurer/`)
+- First, create a `snetd.config.json` in a different folder (i.e. `treasurer/`) according to this template:
+
+```
+{
+   "PRIVATE_KEY": "PRIVATE_KEY_FROM_PAYMENT_ADDRESS",
+   "DAEMON_LISTENING_PORT": DAEMON_PORT,
+   "DAEMON_END_POINT": "DAEMON_HOST:DAEMON_PORT",
+   "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
+   "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
+   "REGISTRY_ADDRESS_KEY": "0x2e4b2f2b72402b9b2d6a7851e37c856c329afe38",
+   "PASSTHROUGH_ENABLED": true,
+   "PASSTHROUGH_ENDPOINT": "SERVICE_GRPC_HOST:SERVICE_GRPC_PORT",
+   "ORGANIZATION_NAME": "ORGANIZATION_NAME",
+   "SERVICE_NAME": "SERVICE_NAME",
+   "LOG": {
+       "LEVEL": "debug",
+       "OUTPUT": {
+          "TYPE": "stdout"
+          }
+   }
+}
+```
+
+For our example, replace tags with these values:
+
+- `PRIVATE_KEY_FROM_PAYMENT_ADDRESS`: The private key for `0xA6E06cF37110930D2906e6Ae70bA6224eDED917B`
+- `DAEMON_PORT`: 7000
+- `DAEMON_HOST:DAEMON_PORT`: http://54.203.198.53:7000
+- `SERVICE_GRPC_HOST:SERVICE_GRPC_PORT`: http://localhost:7003
+- `ORGANIZATION_NAME`: snet
+- `SERVICE_NAME`: basic-service
 
 ```
 # cd treasurer
@@ -325,12 +388,12 @@ To claim these AGIs you must use the `SNET Treasurer` via `SNET Daemon`.
 {
    "PRIVATE_KEY": "PRIVATE_KEY_FROM_PAYMENT_ADDRESS",
    "DAEMON_LISTENING_PORT": 7000,
+   "DAEMON_END_POINT": "http://54.203.198.53:7000",
    "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
+   "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
+   "REGISTRY_ADDRESS_KEY": "0x2e4b2f2b72402b9b2d6a7851e37c856c329afe38",
    "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
-   "REGISTRY_ADDRESS_KEY": "0x2e4b2f2b72402b9b2d6a7851e37c856c329afe38",
-   "DAEMON_END_POINT": "http://54.203.198.53:7000",
-   "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
    "ORGANIZATION_NAME": "snet",
    "SERVICE_NAME": "basic-service",
    "LOG": {
