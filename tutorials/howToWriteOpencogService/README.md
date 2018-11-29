@@ -287,8 +287,6 @@ The superclass inherited by your command has a couple of helper methods and vari
 ```
     opencog::AtomSpace atomSpace;
 
-    virtual void loadModules();
-
     bool loadAtomeseFile(std::string &errorMessage, const std::string &url);
     void evaluateScheme(const std::string &scmLine);
     void evaluateScheme(std::string &output, const std::string &scmLine);
@@ -296,7 +294,6 @@ The superclass inherited by your command has a couple of helper methods and vari
 
 ```
 
-- **loadModules()**: Loads required SCM modules. Default implementation loads only (use-modules (opencog)) This method is called in OpencogSNETService constructor.
 - **atomSpace**: a variable containing the AtomSpace object used to execute any Opencog call.
 - **loadAtomeseFile()**: Fetches the contents of the passed URL (which is supposed to be a .scm file with an Atomese knowledge base) and load it in **atomSpace**. Any errors are reported in `errorMessage`.
 - **evaluateScheme()**: Evaluates the passed Scheme command (any Opencog's scheme functions use the public **atomSpace**). The Scheme command output is discarded.
