@@ -14,7 +14,7 @@ The daemon itself exposes a gRPC/gRPC-Web endpoint regardless of what type of se
 
 ## Service Models
 
-Services are encouraged to define their API surface using [protobuf](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#service_definition) as an IDL. This allows SingularityNET clients to determine the request/response schema programmatically. See [this](Platform-How-Tos.md#create-a-service-model) for an example of how to create a service model for any of the [supported service types](#supported-service-types), and [this](Platform-How-Tos.md#publish-service-metadata) for directions on how to publish the service model to the network.
+Services are encouraged to define their API surface using [protobuf](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#service_definition) as an IDL. This allows SingularityNET clients to determine the request/response schema programmatically. See [this](archive/alpha/Platform-How-Tos.md#create-a-service-model) for an example of how to create a service model for any of the [supported service types](#supported-service-types), and [this](archive/alpha/Platform-How-Tos.md#publish-service-metadata) for directions on how to publish the service model to the network.
 
 ## SSL
 
@@ -34,7 +34,7 @@ Post these successful checks the request is proxied to the service.
 
 ## Configuration
 
-The daemon's behavior with respect to [service type](#supported-service-types), [SSL](#ssl), [blockchain interactions](#blockchain), etc. is configurable via a configuration file, environment variables, and executable flags. See [this](Platform-How-Tos.md#configure-singularitynet-daemon) for a description of the available configuration keys.
+The daemon's behavior with respect to [service type](#supported-service-types), [SSL](#ssl), [blockchain interactions](#blockchain), etc. is configurable via a configuration file, environment variables, and executable flags. See [this](archive/alpha/Platform-How-Tos.md#configure-singularitynet-daemon) for a description of the available configuration keys.
 
 ## Payment channel state
 
