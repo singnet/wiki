@@ -17,15 +17,15 @@ To pass payment data to the server client should fill gRPC metadata fields
 correctly.
 
 gRPC request metadata fields:
-- snet-payment-type - payment protocol type; "escrow" is only supported value,
+- **snet-payment-type** - payment protocol type; "escrow" is only supported value,
   means that MultiPartyEscrow (MPE) contract is used for payments;
-- snet-payment-channel-id - id of the payment channel in MPE contract (decimal
+- **snet-payment-channel-id** - id of the payment channel in MPE contract (decimal
   number string see [below](#using-decimal-numbers))
-- snet-payment-channel-nonce - nonce of the payment channel (decimal number
+- **snet-payment-channel-nonce** - nonce of the payment channel (decimal number
   string)
-- snet-payment-channel-amount - payment amount authorized by client (decimal
+- **snet-payment-channel-amount** - payment amount authorized by client (decimal
   number string)
-- snet-payment-channel-signature-bin - client payment signature (65 bytes in
+- **snet-payment-channel-signature-bin** - client payment signature (65 bytes in
   base64 see [below](#binary-data-encoding))
 
 ## Using decimal numbers
@@ -55,13 +55,13 @@ client information about error happened. In case when service returned the
 error it will be passed to client without transformations.
 
 gRPC error codes:
-- Unauthenticated - payment details are incorrect;
-- IncorrectNonce (custom code 1000) - payment nonce is incorrect, possible
+- **Unauthenticated** - payment details are incorrect;
+- **IncorrectNonce** (custom code **1000**) - payment nonce is incorrect, possible
   reason is that service provider claimed funds and incremented channel nonce;
-- FailedPrecondition - call cannot be done because another call is in progress
+- **FailedPrecondition** - call cannot be done because another call is in progress
   or rate restriction is applied;
-- InvalidArgument - payment details format is incorrect;
-- Internal - unexpected error, daemon state is incorrect or some subsystem is
+- **InvalidArgument** - payment details format is incorrect;
+- **Internal** - unexpected error, daemon state is incorrect or some subsystem is
   unavailable, service provider needs to resolve the issue;
 
 Full list of expected error messages:
