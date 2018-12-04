@@ -181,7 +181,7 @@ Accounts and private keys printed by Ganache will be used in next steps. Deploy 
 ```
 ./node_modules/.bin/truffle migrate --network local
 npm run package-npm
-````
+```
 
 Contract addresses printed after deployment was already used for setup snet. 
 
