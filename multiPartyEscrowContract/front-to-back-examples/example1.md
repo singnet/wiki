@@ -47,7 +47,7 @@ cd dnn-model-services/Services/gRPC/Basic_Template/
 
 # build protobuf
 . buildproto.sh
-python run_basic_service.py
+python3 run_basic_service.py --no-daemon
 ```
 It will start the service at the port 7003.
 
@@ -91,7 +91,7 @@ cd dnn-model-services/Services/gRPC/Basic_Template/
 # ../../../../snet-daemon/build/snetd-linux-amd64 is a path to daemon
 
 # we make a link for simplicity (service is already running)
-ln -s ../../../../snet-daemon/build/snetd-linux-amd64
+ln -s ../../../../snet-daemon/build/snetd-linux-amd64 snetd
 
 # if it is not the first time you run thit test, and state of blockchain was reset,
 # you should reset the state of etcd storage as well
@@ -106,8 +106,6 @@ cd dnn-model-services/Services/gRPC/Basic_Template/
 
 cat > snetd.config.json << EOF
 {
-   "PRIVATE_KEY": "1000000000000000000000000000000000000000000000000000000000000000",
-   "DAEMON_LISTENING_PORT": 8080,
    "ETHEREUM_JSON_RPC_ENDPOINT": "http://localhost:8545",
    "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
@@ -126,7 +124,7 @@ cat > snetd.config.json << EOF
 EOF
 ```
 
-It should be noted that we use wrong private address, because this daemon will not make any on-chain calls.
+It should be noted that we do not provide any ethereum identity, because this daemon will not make any on-chain calls.
 
 ###### Run daemon
 
@@ -209,7 +207,6 @@ ln -s ../snet-daemon/build/snetd-linux-amd64
 cat > snetd.config.json << EOF
 {
    "PRIVATE_KEY": "04899d5fd471ce68f84a5ec64e2e4b6b045d8b850599a57f5b307024be01f262",
-   "DAEMON_LISTENING_PORT": 8080,
    "ETHEREUM_JSON_RPC_ENDPOINT": "http://localhost:8545",
    "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",

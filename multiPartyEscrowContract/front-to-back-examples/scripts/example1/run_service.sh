@@ -23,17 +23,9 @@ snet organization  create testo -y
 # Register our service
 snet service publish testo tests -y
 
-
-
-# Start service 
-#!!!! you might want to run it in the separate terminal without &
-python run_basic_service.py > log_service.txt & 
-
 # Configure daemon
 cat > snetd.config.json << EOF
 {
-   "PRIVATE_KEY": "1000000000000000000000000000000000000000000000000000000000000000",
-   "DAEMON_LISTENING_PORT": 8080,
    "ETHEREUM_JSON_RPC_ENDPOINT": "http://localhost:8545",
    "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
@@ -52,4 +44,9 @@ cat > snetd.config.json << EOF
 EOF
 
 # Start daemon
-../../../../snet-daemon/build/snetd-linux-amd64 
+ln -s ../../../../snet-daemon/build/snetd-linux-amd64 snetd
+
+export PATH=./:$PATH
+
+# Start service. It will find and start daemon automaticaly
+python3 run_basic_service.py
