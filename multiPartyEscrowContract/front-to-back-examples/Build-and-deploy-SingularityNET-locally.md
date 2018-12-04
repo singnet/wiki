@@ -184,7 +184,7 @@ Deploy contracts using Truffle.
 npm run package-npm
 ```
 
-Contract addresses printed after deployment was already used for setup snet. 
+Contract addresses printed after deployment was will be used for setup snet. 
 
 Truffle deploys contracts using first account of the test network. As SingularityNETToken contract is deployed using this account this account's balance keeps all of SingularityNET tokens issued during deployment. Other contracts deployed are Registry and MultiPartyEscrow. Registry keeps the list of organization and published services, and MultiPartyEscrow is a part of our payment system.
 
