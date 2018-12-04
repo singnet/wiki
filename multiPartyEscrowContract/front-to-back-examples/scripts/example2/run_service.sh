@@ -33,7 +33,6 @@ python run_basic_service.py > log_service.txt &
 # Configure daemon
 cat > snetd.config.json << EOF
 {
-   "PRIVATE_KEY": "1000000000000000000000000000000000000000000000000000000000000000",
    "DAEMON_LISTENING_PORT": 8080,
    "ETHEREUM_JSON_RPC_ENDPOINT": "http://localhost:8545",
    "PASSTHROUGH_ENABLED": true,

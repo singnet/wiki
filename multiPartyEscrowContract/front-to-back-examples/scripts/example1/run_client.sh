@@ -9,7 +9,7 @@ export PATH=${GOPATH}/bin:${PATH}
 snet client balance
 
 # deposit tokens to MPE 
-snet client deposit 42000.22
+snet client deposit 42000.22 -y
 
 # open channel with our service (organization=testo service_name=tests)
 # channel with channel_id=0 should be created and initilized
