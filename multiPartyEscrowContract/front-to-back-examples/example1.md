@@ -106,7 +106,6 @@ cd dnn-model-services/Services/gRPC/Basic_Template/
 
 cat > snetd.config.json << EOF
 {
-   "DAEMON_LISTENING_PORT": 8080,
    "ETHEREUM_JSON_RPC_ENDPOINT": "http://localhost:8545",
    "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
@@ -208,7 +207,6 @@ ln -s ../snet-daemon/build/snetd-linux-amd64
 cat > snetd.config.json << EOF
 {
    "PRIVATE_KEY": "04899d5fd471ce68f84a5ec64e2e4b6b045d8b850599a57f5b307024be01f262",
-   "DAEMON_LISTENING_PORT": 8080,
    "ETHEREUM_JSON_RPC_ENDPOINT": "http://localhost:8545",
    "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",

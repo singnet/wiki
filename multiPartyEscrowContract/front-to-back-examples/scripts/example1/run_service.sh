@@ -26,7 +26,6 @@ snet service publish testo tests -y
 # Configure daemon
 cat > snetd.config.json << EOF
 {
-   "DAEMON_LISTENING_PORT": 8080,
    "ETHEREUM_JSON_RPC_ENDPOINT": "http://localhost:8545",
    "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
