@@ -47,7 +47,7 @@ cd dnn-model-services/Services/gRPC/Basic_Template/
 
 # build protobuf
 . buildproto.sh
-python run_basic_service.py --no-daemon
+python3 run_basic_service.py --no-daemon
 ```
 It will start the service at the port 7003.
 
