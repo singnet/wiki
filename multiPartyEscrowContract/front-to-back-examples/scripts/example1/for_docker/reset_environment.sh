@@ -28,7 +28,7 @@ nohup ipfs daemon > ipfs.log 2>&1 &
 killall node || echo "supress an error"
 
 cd $SINGNET_REPOS/platform-contracts
-nohup ./node_modules/.bin/ganache-cli --mnemonic 'gauge enact biology destroy normal tunnel slight slide wide sauce ladder produce' --networkId 829257324 2>&1 > ~/singnet/ganache.log &
+nohup ./node_modules/.bin/ganache-cli --mnemonic 'gauge enact biology destroy normal tunnel slight slide wide sauce ladder produce' 2>&1 > ~/singnet/ganache.log &
 ./node_modules/.bin/truffle migrate --network local
 
 
