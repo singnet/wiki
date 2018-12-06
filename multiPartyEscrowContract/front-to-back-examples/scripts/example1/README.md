@@ -33,9 +33,9 @@ At this point your can "commit" your docker container.
 
 1. Open new terminal on your main system (without closing your docker container!)
 2. Using "docker ps" your get "container id" of your running container.
-3. your type "docker commit <container_id> $USER/snet_example1"  
+3. Type "docker commit <container_id> $USER/snet_example1"  
 
-After this your will be able to use $USER/snet_example1 instead of ubuntu:latest and your can skill install_all.
+After this your will be able to use $USER/snet_example1 instead of ubuntu:latest (without running install_all.sh)
 ```
 # your should be inside example1 directory
 # cd wiki/multiPartyEscrowContract/front-to-back-examples/scripts/example1/
