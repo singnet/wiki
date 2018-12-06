@@ -28,6 +28,8 @@ RUN npm install -g ganache-cli truffle
 RUN apt-get install -y python3 python3-pip
 # install other libraries
 RUN apt-get install -y libudev-dev libusb-1.0-0-dev
+# additional tools
+RUN apt-get install -y net-tools screen vim
 
 # install IPFS
 ENV IPFS_PATH ${IPFS}
@@ -77,11 +79,11 @@ RUN git clone https://github.com/singnet/wiki
 
 # publish Ethereum related environment variables
 ENV NETWORK_ID 12345
-ENV DEPLOYER_ADDR 0x592e3c0f3b038a0d673f19a18a773f993d4b2610
+ENV DEPLOYER_ADDR 0x592E3C0f3B038A0D673F19a18a773F993d4b2610
 ENV DEPLOYER_KEY 0xc71478a6d0fe44e763649de0a0deb5a080b788eefbbcf9c6f7aef0dd5dbd67e0
-ENV CLIENT_ADDR 0x3b2b3c2e2e7c93db335e69d827f3cc4bc2a2a2cb
+ENV CLIENT_ADDR 0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB
 ENV CLIENT_KEY 0x04899d5fd471ce68f84a5ec64e2e4b6b045d8b850599a57f5b307024be01f262
-ENV PUBLISHER_ADDR 0x0067b427e299eb2a4cbafc0b04c723f77c6d8a18
+ENV PUBLISHER_ADDR 0x0067b427E299Eb2A4CBafc0B04C723F77c6d8a18
 ENV PUBLISHER_KEY 0xba398df3130586b0d5e6ef3f757bf7fe8a1299d4b7268fdaae415952ed30ba87
 ENV TOKEN_ADDR 0x6e5f20669177f5bdf3703ec5ea9c4d4fe3aabd14
 ENV REGISTRY_ADDR 0x4e74fefa82e83e0964f0d9f53c68e03f7298a8b2
@@ -96,6 +98,7 @@ RUN snet identity create deployer key --private-key ${DEPLOYER_KEY}
 RUN snet identity create client key --private-key ${CLIENT_KEY}
 RUN snet identity deployer
 RUN snet network local
+RUN snet set default_ipfs_endpoint http://localhost:5002
 RUN snet set current_singularitynettoken_at ${TOKEN_ADDR}
 RUN snet set current_registry_at ${REGISTRY_ADDR}
 RUN snet set current_multipartyescrow_at ${MULTIPARTYESCROW_ADDR}
