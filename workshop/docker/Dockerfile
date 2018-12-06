@@ -3,12 +3,16 @@ FROM ubuntu:18.04
 # setup environment variables
 ENV ROOT /singnet
 ENV GOPATH ${ROOT}
-ENV PATH ${GOPATH}/bin:${PATH}
+ENV BIN ${GOPATH}/bin
+ENV PATH ${BIN}:${PATH}
 ENV LOG ${ROOT}/log
+ENV IPFS ${ROOT}/ipfs
 ENV SINGNET ${GOPATH}/src/github.com/singnet
 
 # setup folders needed
+RUN mkdir -p ${BIN}
 RUN mkdir -p ${LOG}
+RUN mkdir -p ${IPFS}
 RUN mkdir -p ${SINGNET}
 
 # update apt
@@ -26,11 +30,11 @@ RUN apt-get install -y python3 python3-pip
 RUN apt-get install -y libudev-dev libusb-1.0-0-dev
 
 # install IPFS
+ENV IPFS_PATH ${IPFS}
 RUN apt-get install -y curl
 COPY ./install_ipfs.sh ${GOPATH}/bin/
 RUN install_ipfs.sh
 # setup IPFS
-ENV IPFS_PATH ${GOPATH}/bin
 RUN ipfs init
 RUN ipfs bootstrap rm --all
 RUN ipfs config Addresses.API /ip4/127.0.0.1/tcp/5002
@@ -79,13 +83,22 @@ ENV CLIENT_ADDR 0x3b2b3c2e2e7c93db335e69d827f3cc4bc2a2a2cb
 ENV CLIENT_KEY 0x04899d5fd471ce68f84a5ec64e2e4b6b045d8b850599a57f5b307024be01f262
 ENV PUBLISHER_ADDR 0x0067b427e299eb2a4cbafc0b04c723f77c6d8a18
 ENV PUBLISHER_KEY 0xba398df3130586b0d5e6ef3f757bf7fe8a1299d4b7268fdaae415952ed30ba87
+ENV TOKEN_ADDR 0x6e5f20669177f5bdf3703ec5ea9c4d4fe3aabd14
+ENV REGISTRY_ADDR 0x4e74fefa82e83e0964f0d9f53c68e03f7298a8b2
+ENV MULTIPARTYESCROW_ADDR 0x5c7a4290f6f8ff64c69eeffdfafc8644a4ec3a4e
 
-# creating identities
-RUN snet
-RUN snet network create local http://localhost:8545
-RUN snet identity create deployer key --private-key 0xc71478a6d0fe44e763649de0a0deb5a080b788eefbbcf9c6f7aef0dd5dbd67e0 --network local
-RUN snet identity create client key --private-key 0x04899d5fd471ce68f84a5ec64e2e4b6b045d8b850599a57f5b307024be01f262 --network local
+# setup snet-cli
+#RUN snet network create --force local http://127.0.0.1:8545
+RUN snet || true
+COPY ./add_local_network.sh ${GOPATH}/bin
+RUN add_local_network.sh
+RUN snet identity create deployer key --private-key ${DEPLOYER_KEY}
+RUN snet identity create client key --private-key ${CLIENT_KEY}
 RUN snet identity deployer
+RUN snet network local
+RUN snet set current_singularitynettoken_at ${TOKEN_ADDR}
+RUN snet set current_registry_at ${REGISTRY_ADDR}
+RUN snet set current_multipartyescrow_at ${MULTIPARTYESCROW_ADDR}
 
-COPY ./start.sh ${GOPATH}/bin/
-CMD start.sh
+COPY ./start_environment.sh ${GOPATH}/bin/
+CMD start_environment.sh
