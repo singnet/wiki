@@ -15,8 +15,7 @@ Test should be run on clean environment in the given order.
 ##### Install everything
 
 ```bash
-#I. Download example scripts and make sure that scripts are in the
-#  current directory. There is one possible way to do it: 
+#I. Download example scripts and make sure that scripts are in the current directory. 
 
 git clone https://github.com/singnet/wiki
 cd wiki/multiPartyEscrowContract/front-to-back-examples/scripts/example1/
