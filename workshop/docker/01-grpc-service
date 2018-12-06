@@ -1,0 +1,121 @@
+snet identity create --private-key $PUBLISHER_KEY publisher key
+snet identity publisher
+snet organization create ExampleOrganization --yes
+
+mkdir -p ${SINGNET}/examples/01-grpc-service
+cd ${SINGNET}/examples/01-grpc-service
+
+cat <<EOF >echo_service.proto 
+syntax = "proto3";
+
+service EchoService {
+	rpc echo(EchoRequest) returns (EchoResponse);
+}
+
+message EchoRequest {
+	string message = 1;
+}
+
+message EchoResponse {
+	string message = 1;
+}
+EOF
+
+cat echo_service.proto 
+
+python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. ./echo_service.proto
+
+cat <<EOF >echo_service.py
+from concurrent import futures
+import grpc
+import time
+
+import echo_service_pb2
+import echo_service_pb2_grpc
+
+class EchoServiceServicer(echo_service_pb2_grpc.EchoServiceServicer):
+
+  def echo(self, request, context):
+      response = echo_service_pb2.EchoResponse()
+      response.message = "echo" + request.message
+      return response
+
+
+def main():
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    echo_service_pb2_grpc.add_EchoServiceServicer_to_server(
+        EchoServiceServicer(),
+        server)
+    server.add_insecure_port('127.0.0.1:12345')
+    server.start()
+
+    while True:
+        time.sleep(1)
+
+if __name__ == "__main__":
+    main()
+EOF
+
+cat echo_service.py
+
+screen -d -m python3 echo_service.py
+
+snet service metadata_init . EchoService $PUBLISHER_ADDR --encoding proto --service_type grpc
+snet service metadata_set_fixed_price 3
+snet service metadata_add_endpoints http://127.0.0.1:8080
+cat service_metadata.json
+snet service publish ExampleOrganization EchoService --yes
+
+cat <<EOF >snetd.config.json 
+{
+  "blockchain_enabled": true,
+  "daemon_end_point": "http://127.0.0.1:8080",
+  "ethereum_json_rpc_endpoint": "http://127.0.0.1:8545",
+  "ipfs_end_point": "http://localhost:5002/",
+  "log": {
+    "level": "debug",
+    "output": {
+      "type": "stdout"
+    }
+  },
+  "organization_name": "ExampleOrganization",
+  "passthrough_enabled": true,
+  "registry_address_key": "0x4e74fefa82e83e0964f0d9f53c68e03f7298a8b2",
+  "service_name": "EchoService",
+  "passthrough_endpoint": "http://127.0.0.1:12345"
+}
+EOF
+
+cat snetd.config.json 
+screen -d -m snetd-linux-amd64
+
+snet identity deployer
+snet client balance
+snet contract SingularityNetToken transferTokens $CLIENT_ADDR 100000000000 --transact --yes
+snet identity client
+snet client balance
+
+snet client deposit 1000 -y
+snet client open_init_channel_registry ExampleOrganization EchoService 50 57600 -y
+snet client call 0 3 localhost:8080 echo '{"message": "hello"}'
+
+cat << EOF >echo_client.py
+import grpc
+
+import echo_service_pb2
+import echo_service_pb2_grpc
+
+def main():
+    channel = grpc.insecure_channel('localhost:12345')
+    service = echo_service_pb2_grpc.EchoServiceStub(channel)
+
+    request = echo_service_pb2.EchoRequest()
+    request.message = "test"
+    response = service.echo(request)
+    print(response)
+
+if __name__ == "__main__":
+    main()
+EOF
+
+cat echo_client.py
