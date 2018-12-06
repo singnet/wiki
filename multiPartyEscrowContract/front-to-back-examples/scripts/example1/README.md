@@ -10,9 +10,9 @@ of claimed channels, and claim your channels
 
 Test should be run on clean environment in the given order.
 
-### Run tests in docker container
+## Run tests in docker container
 
-##### Install everything
+#### Install everything
 
 ```bash
 #I. Download example scripts and make sure that scripts are in the current directory. 
@@ -27,7 +27,7 @@ docker run -v `pwd`:/example1 -it ubuntu:latest
 . /example1/for_docker/install_all.sh 
 ```
 
-##### Create docker image with everything installed (optional)
+#### Create docker image with everything installed (optional)
 
 At this point your can "commit" your docker container. 
 
@@ -42,7 +42,7 @@ After this your will be able to use $USER/snet_example1 instead of ubuntu:latest
 docker run -v `pwd`:/example1 -it $USER/snet_example1
 ```
 
-##### Register and run example service 
+#### Register and run example service 
 
 ```bash
 # reset environment 
@@ -52,7 +52,7 @@ docker run -v `pwd`:/example1 -it $USER/snet_example1
 . /example1/run_service.sh
 ```
 
-##### Run client
+#### Run client
 
 After running the service terminal will not return to your, so you will need to open the second terminal in your container
 
