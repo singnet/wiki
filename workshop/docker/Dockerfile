@@ -103,5 +103,8 @@ RUN snet set current_singularitynettoken_at ${TOKEN_ADDR}
 RUN snet set current_registry_at ${REGISTRY_ADDR}
 RUN snet set current_multipartyescrow_at ${MULTIPARTYESCROW_ADDR}
 
+# copy examples
+COPY examples ${SINGNET}/
+
 COPY ./start_environment.sh ${GOPATH}/bin/
 CMD start_environment.sh
