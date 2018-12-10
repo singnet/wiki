@@ -6,7 +6,7 @@
 
 ## Overview
 
-This tutorial describes the process of building and deploying fully functional local SingularityNET environment. In such environment one can publish services, call them and have full control over local test blockchain network.
+This tutorial describes the process of building and deploying a fully functional local SingularityNET environment. In such environment one can publish services, call them and have full control over a local test blockchain network.
 
 ## Install prerequisites
 
@@ -64,7 +64,7 @@ sudo apt-get install libudev-dev libusb-1.0-0-dev
 
 ### Setup Go building environments
 
-Go compiler expects that path to the workspace is exported as ```GOPATH``` variable. ```SINGNET_REPOS``` is exported to simplify change directory commands below.
+Go compiler expects that the path to the workspace is exported as ```GOPATH``` variable. ```SINGNET_REPOS``` is exported to simplify change directory commands below.
 
 ```
 mkdir -p singnet/src/github.com/singnet
@@ -77,7 +77,7 @@ export PATH=${GOPATH}/bin:${PATH}
 
 ### Deploy local IPFS instance
 
-IPFS is used by SingularityNET to keep published services RPC models. For local test environment we will setup private local IPFS instance.
+IPFS is used by SingularityNET to keep published services RPC models. For local test environment we will setup a private local IPFS instance.
 
 Initialize IPFS data folder:
 
@@ -169,7 +169,7 @@ ipfs daemon >$GOPATH/log/ipfs.log 2>&1 &
 
 ### Start local Ethereum network
 
-Start local Ethereum network. Pass mnemonic to produce deterministic blockchain environment: accounts, private keys and behavior.
+Start a local Ethereum network. Pass mnemonic to produce a deterministic blockchain environment: accounts, private keys and behavior.
 
 ```
 cd $SINGNET_REPOS/platform-contracts
@@ -184,9 +184,9 @@ Deploy contracts using Truffle.
 npm run package-npm
 ```
 
-Contract addresses printed after deployment was will be used for setup snet. 
+Contract addresses printed after deployment will be used to setup snet. 
 
-Truffle deploys contracts using first account of the test network. As SingularityNETToken contract is deployed using this account this account's balance keeps all of SingularityNET tokens issued during deployment. Other contracts deployed are Registry and MultiPartyEscrow. Registry keeps the list of organization and published services, and MultiPartyEscrow is a part of our payment system.
+Truffle deploys contracts using the first account of the test network. As SingularityNETToken contract is deployed using this account, this account's balance keeps all of SingularityNET tokens issued during deployment. Other contracts deployed are Registry and MultiPartyEscrow. Registry keeps the list of organization and published services, and MultiPartyEscrow is a part of our payment system.
 
 
 ### Configure snet-cli for local environment
