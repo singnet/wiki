@@ -207,8 +207,6 @@ In the service folder, create a file named `snetd.config.json` according to this
 
 ```
 {
-   "PRIVATE_KEY": "1000000000000000000000000000000000000000000000000000000000000000",
-   "DAEMON_LISTENING_PORT": DAEMON_PORT,
    "DAEMON_END_POINT": "DAEMON_HOST:DAEMON_PORT",
    "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
@@ -228,7 +226,6 @@ In the service folder, create a file named `snetd.config.json` according to this
 
 For our example, replace tags with these values:
 
-- `DAEMON_PORT`: 7000
 - `DAEMON_HOST:DAEMON_PORT`: http://54.203.198.53:7000
 - `SERVICE_GRPC_HOST:SERVICE_GRPC_PORT`: http://localhost:7003
 - `ORGANIZATION_NAME`: snet
@@ -236,8 +233,6 @@ For our example, replace tags with these values:
 
 ```
 {
-   "PRIVATE_KEY": "1000000000000000000000000000000000000000000000000000000000000000",
-   "DAEMON_LISTENING_PORT": 7000,
    "DAEMON_END_POINT": "http://54.203.198.53:7000",
    "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
@@ -254,8 +249,6 @@ For our example, replace tags with these values:
    }
 }
 ```
-
-Attention to `PRIVATE_KEY`, it must have this value to `SNET Daemon` be able to run without error. 
 
 Now run the service (that will run and instance of `SNET Daemon`) from the same path where `snet.config.json` is:
 
@@ -355,7 +348,6 @@ To claim these AGIs you must use the `SNET Treasurer` via `SNET Daemon`.
 ```
 {
    "PRIVATE_KEY": "PRIVATE_KEY_FROM_PAYMENT_ADDRESS",
-   "DAEMON_LISTENING_PORT": DAEMON_PORT,
    "DAEMON_END_POINT": "DAEMON_HOST:DAEMON_PORT",
    "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
@@ -376,7 +368,6 @@ To claim these AGIs you must use the `SNET Treasurer` via `SNET Daemon`.
 For our example, replace tags with these values:
 
 - `PRIVATE_KEY_FROM_PAYMENT_ADDRESS`: The private key for `0xA6E06cF37110930D2906e6Ae70bA6224eDED917B`
-- `DAEMON_PORT`: 7000
 - `DAEMON_HOST:DAEMON_PORT`: http://54.203.198.53:7000
 - `SERVICE_GRPC_HOST:SERVICE_GRPC_PORT`: http://localhost:7003
 - `ORGANIZATION_NAME`: snet
@@ -387,7 +378,6 @@ For our example, replace tags with these values:
 # cat snetd.config.json
 {
    "PRIVATE_KEY": "PRIVATE_KEY_FROM_PAYMENT_ADDRESS",
-   "DAEMON_LISTENING_PORT": 7000,
    "DAEMON_END_POINT": "http://54.203.198.53:7000",
    "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
