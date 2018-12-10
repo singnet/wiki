@@ -1,3 +1,5 @@
+# This example demonstrates how to use snet-cli tool
+
 # transfer tokens to the client
 snet identity deployer
 snet client balance
@@ -16,3 +18,4 @@ snet identity create --private-key $PUBLISHER_KEY publisher key
 snet identity publisher
 snet organization create ExampleOrganization --yes
 
+# next example
