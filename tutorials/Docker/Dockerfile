@@ -31,9 +31,9 @@ RUN cd ${SINGNET_REPOS} && \
 RUN cd ${SINGNET_REPOS} && \
     mkdir snet-daemon && \
     cd snet-daemon && \
-    wget https://github.com/singnet/snet-daemon/releases/download/v0.1.2/snetd-0.1.2.tar.gz && \
-    tar -xvf snetd-0.1.2.tar.gz && \
-    mv snetd-0.1.2/snetd-linux-amd64 /usr/bin/snetd
+    wget https://github.com/singnet/snet-daemon/releases/download/v0.1.3/snetd-0.1.3.tar.gz && \
+    tar -xvf snetd-0.1.3.tar.gz && \
+    mv ./linux-amd64/snetd /usr/bin/snetd
 
 RUN cd ${SINGNET_REPOS} && \
     git clone https://github.com/singnet/wiki.git

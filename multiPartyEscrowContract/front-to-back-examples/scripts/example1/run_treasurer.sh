@@ -10,7 +10,7 @@ mkdir treasurer
 cd treasurer
 
 
-# Configure treasurer server. There is only one difference from the daemon --- we provide real PRIVATE_KEY
+# Configure treasurer server. There is only one difference from the daemon --- we provide PRIVATE_KEY
 
 cat > snetd.config.json << EOF
 {
