@@ -1,3 +1,5 @@
+# SingularityNet workshop examples
+
 Docker image and number of simple application examples which demonstrate how to
 work with SingularityNet platform.
 
@@ -34,6 +36,8 @@ After docker image is up you will be in the `singnet` folder which contains all
 main SingularityNet git repositories and SingularityNet examples.
 
 Please start with reading `00-snet-cli/README` file and follow instructions.
+
+# Preparations made in image
 
 What is done in the docker image:
 
