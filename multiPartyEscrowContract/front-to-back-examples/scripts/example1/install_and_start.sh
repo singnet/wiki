@@ -9,7 +9,6 @@ export SINGNET_REPOS=${GOPATH}/src/github.com/singnet
 export PATH=${GOPATH}/bin:${PATH}
 
 # Init and start IPFS
-export IPFS_PATH=$GOPATH/ipfs
 ipfs init
 ipfs bootstrap rm --all
 ipfs config Addresses.API /ip4/127.0.0.1/tcp/5002

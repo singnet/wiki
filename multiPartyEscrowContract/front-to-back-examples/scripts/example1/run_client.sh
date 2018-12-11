@@ -4,6 +4,7 @@ cd ~/singnet
 export GOPATH=`pwd`
 export SINGNET_REPOS=${GOPATH}/src/github.com/singnet
 export PATH=${GOPATH}/bin:${PATH}
+export PATH=~/.local/bin/:${PATH}
 
 # check balance (all tokens belongs to this idenity)
 snet client balance
