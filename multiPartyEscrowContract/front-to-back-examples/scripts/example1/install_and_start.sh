@@ -7,6 +7,8 @@ mkdir log
 export GOPATH=`pwd`
 export SINGNET_REPOS=${GOPATH}/src/github.com/singnet
 export PATH=${GOPATH}/bin:${PATH}
+export PATH=~/.local/bin/:${PATH}
+
 
 # Init and start IPFS
 ipfs init
