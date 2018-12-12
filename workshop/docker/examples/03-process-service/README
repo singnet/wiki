@@ -14,3 +14,6 @@ screen -d -m snetd-linux-amd64
 snet identity client
 snet client open_init_channel_registry ExampleOrganization ProcessService 50 57600 -y
 snet client call 1 3 localhost:8080 echo '{"message": "hello"}'
+
+# stop service
+stop_service.sh
