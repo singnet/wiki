@@ -15,15 +15,15 @@ _You will need a private-public key pair to register your service in SNET. Gener
 
 Run this tutorial from a bash terminal.
 
-In this tutorial we'll publish a basic service in SingularityNET using Kovan Test Network.
+In this tutorial we'll publish an example service in SingularityNET using Kovan Test Network.
 
 ## Step 1 
 
 Setup a `ubuntu:18.04` docker container using provided `Dockerfile`.
 
 ```
-$ docker build -t snet_service https://github.com/singnet/wiki.git#master:/tutorials/Docker
-$ docker run -p 7000:7000 -ti snet_service bash
+$ docker build -t snet_example_service https://github.com/singnet/wiki.git#master:/tutorials/Docker
+$ docker run -p 7000:7000 -ti snet_example_service bash
 ```
 
 Step 1 may take a couple of minutes to finish. Step 2 can be performed concurrently.
@@ -74,11 +74,11 @@ If you want to join an existing organization (e.g. `snet`), ask the owner to add
 
 Build a JSON configuration file for your service.
 
-In this tutorial we use a simple service implemented in [DNN Model Services](https://github.com/singnet/dnn-model-services.git).
+In this tutorial we use a simple service implemented in [SingularityNET Example Service](https://github.com/singnet/example-service).
 
 ```
-# git clone https://github.com/singnet/dnn-model-services.git
-# cd dnn-model-services/Services/gRPC/Basic_Template/service/
+# git clone https://github.com/singnet/example-service.git
+# cd example-service
 ```
 To build the JSON configuration file, execute the following command and enter the requested information.
 
@@ -90,7 +90,7 @@ To build the JSON configuration file, execute the following command and enter th
 
 For example:
 ```
-# snet service metadata_init service_spec/ basic-service-name 0xA6E06cF37110930D2906e6Ae70bA6224eDED917B
+# snet service metadata_init service/service_spec/ example-service 0xA6E06cF37110930D2906e6Ae70bA6224eDED917B
 ```
 
 With these parameters, the JSON must looks like:
@@ -98,7 +98,7 @@ With these parameters, the JSON must looks like:
 ```
 {
     "version": 1,
-    "display_name": "basic-service-name",
+    "display_name": "example-service",
     "encoding": "grpc",
     "service_type": "grpc",
     "payment_expiration_threshold": 40320,
@@ -116,7 +116,7 @@ With these parameters, the JSON must looks like:
 }
 ```
 
-Now, lets set a fixed price for your `basic-service-name`:
+Now, lets set a fixed price for your `example-service`:
 
 ```
 # snet service metadata_set_fixed_price PRICE_IN_AGI
@@ -144,7 +144,7 @@ Our service's JSON configuration now looks like:
 ```
 {
     "version": 1,
-    "display_name": "basic-service-name",
+    "display_name": "example-service",
     "encoding": "grpc",
     "service_type": "grpc",
     "payment_expiration_threshold": 40320,
@@ -184,7 +184,7 @@ Publish your service
 `SERVICE_DISPLAY_NAME` or different.
 
 ```
-# snet service publish snet basic-service
+# snet service publish snet example-service
 ```
 
 Check if your service has been properly published
@@ -207,12 +207,12 @@ In the service folder, create a file named `snetd.config.json` according to this
 
 ```
 {
-   "DAEMON_END_POINT": "DAEMON_HOST:DAEMON_PORT",
+   "DAEMON_END_POINT": "http://DAEMON_HOST:DAEMON_PORT",
    "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
    "REGISTRY_ADDRESS_KEY": "0x2e4b2f2b72402b9b2d6a7851e37c856c329afe38",
    "PASSTHROUGH_ENABLED": true,
-   "PASSTHROUGH_ENDPOINT": "SERVICE_GRPC_HOST:SERVICE_GRPC_PORT",  
+   "PASSTHROUGH_ENDPOINT": "http://SERVICE_GRPC_HOST:SERVICE_GRPC_PORT",  
    "ORGANIZATION_NAME": "ORGANIZATION_NAME",
    "SERVICE_NAME": "SERVICE_NAME",
    "LOG": {
@@ -226,10 +226,10 @@ In the service folder, create a file named `snetd.config.json` according to this
 
 For our example, replace tags with these values:
 
-- `DAEMON_HOST:DAEMON_PORT`: http://54.203.198.53:7000
-- `SERVICE_GRPC_HOST:SERVICE_GRPC_PORT`: http://localhost:7003
+- `http://DAEMON_HOST:DAEMON_PORT`: http://54.203.198.53:7000
+- `http://SERVICE_GRPC_HOST:SERVICE_GRPC_PORT`: http://localhost:7003
 - `ORGANIZATION_NAME`: snet
-- `SERVICE_NAME`: basic-service
+- `SERVICE_NAME`: example-service
 
 ```
 {
@@ -240,7 +240,7 @@ For our example, replace tags with these values:
    "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
    "ORGANIZATION_NAME": "snet",
-   "SERVICE_NAME": "basic-service",
+   "SERVICE_NAME": "example-service",
    "LOG": {
        "LEVEL": "debug",
        "OUTPUT": {
@@ -253,7 +253,7 @@ For our example, replace tags with these values:
 Now run the service (that will run and instance of `SNET Daemon`) from the same path where `snet.config.json` is:
 
 ```
-# python3.6 run_basic_service.py
+# python3.6 run_example_service.py
 ```
 
 At this point your service should be up and running. You can test it by making
@@ -263,14 +263,14 @@ attach a new terminal to the Docker container and run the client request test.
 You can make local requests (testing purpose)
 
 ```
-$ docker exec -it snet_service bash
+$ docker exec -it snet_example_service bash
 ```
 
 Inside the Docker container:
 
 ```
-# cd dnn-model-services/Services/gRPC/Basic_Template
-# python3.6 test_call_basic_service.py
+# cd example-service
+# python3.6 test_example_service.py
 ```
 
 Or you can make requests through `SingularityNET`:
@@ -301,7 +301,7 @@ Or you can make requests through `SingularityNET`:
 For example:
 
 ```
-# snet client open_init_channel_registry snet basic-service 0.00000001 11000000
+# snet client open_init_channel_registry snet example-service 0.00000001 11000000
 ```
 
 - Now, you can check your channels:
@@ -348,12 +348,12 @@ To claim these AGIs you must use the `SNET Treasurer` via `SNET Daemon`.
 ```
 {
    "PRIVATE_KEY": "PRIVATE_KEY_FROM_PAYMENT_ADDRESS",
-   "DAEMON_END_POINT": "DAEMON_HOST:DAEMON_PORT",
+   "DAEMON_END_POINT": "http://DAEMON_HOST:DAEMON_PORT",
    "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
    "REGISTRY_ADDRESS_KEY": "0x2e4b2f2b72402b9b2d6a7851e37c856c329afe38",
    "PASSTHROUGH_ENABLED": true,
-   "PASSTHROUGH_ENDPOINT": "SERVICE_GRPC_HOST:SERVICE_GRPC_PORT",
+   "PASSTHROUGH_ENDPOINT": "http://SERVICE_GRPC_HOST:SERVICE_GRPC_PORT",
    "ORGANIZATION_NAME": "ORGANIZATION_NAME",
    "SERVICE_NAME": "SERVICE_NAME",
    "LOG": {
@@ -371,7 +371,7 @@ For our example, replace tags with these values:
 - `DAEMON_HOST:DAEMON_PORT`: http://54.203.198.53:7000
 - `SERVICE_GRPC_HOST:SERVICE_GRPC_PORT`: http://localhost:7003
 - `ORGANIZATION_NAME`: snet
-- `SERVICE_NAME`: basic-service
+- `SERVICE_NAME`: example-service
 
 ```
 # cd treasurer
@@ -385,7 +385,7 @@ For our example, replace tags with these values:
    "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
    "ORGANIZATION_NAME": "snet",
-   "SERVICE_NAME": "basic-service",
+   "SERVICE_NAME": "example-service",
    "LOG": {
        "LEVEL": "debug",
        "OUTPUT": {
