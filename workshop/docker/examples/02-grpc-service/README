@@ -27,3 +27,5 @@ snet identity client
 snet client open_init_channel_registry ExampleOrganization EchoService 50 57600 -y
 snet client call 0 3 localhost:8080 echo '{"message": "hello"}'
 
+# stop the service
+stop_service.sh

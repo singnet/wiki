@@ -1,7 +1,19 @@
 FROM ubuntu:18.04
 
+# update apt and sudo
+RUN apt-get update
+RUN apt-get install sudo
+
+# add unprivileged user
+RUN adduser --disabled-password --gecos '' singnet
+RUN adduser singnet sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+USER singnet
+RUN umask 0000
+RUN echo 'umask 0000' >> ${HOME}/.bashrc
+
 # setup environment variables
-ENV ROOT /singnet
+ENV ROOT /home/singnet
 ENV GOPATH ${ROOT}
 ENV BIN ${GOPATH}/bin
 ENV PATH ${BIN}:${PATH}
@@ -15,23 +27,21 @@ RUN mkdir -p ${LOG}
 RUN mkdir -p ${IPFS}
 RUN mkdir -p ${SINGNET}
 
-# update apt
-RUN apt-get update
 # install git
-RUN apt-get install -y git
+RUN sudo apt-get install -y git
 # install NodeJS dev environment
-RUN apt-get install -y nodejs npm
-RUN npm install -g ganache-cli truffle
+RUN sudo apt-get install -y nodejs npm
+RUN sudo npm install -g ganache-cli truffle
 # install Python dev environment
-RUN apt-get install -y python3 python3-pip
+RUN sudo apt-get install -y python3 python3-pip
 # install other libraries
-RUN apt-get install -y libudev-dev libusb-1.0-0-dev
+RUN sudo apt-get install -y libudev-dev libusb-1.0-0-dev
 # additional tools
-RUN apt-get install -y net-tools screen vim wget
+RUN sudo apt-get install -y net-tools screen vim wget
 
 # install IPFS
 ENV IPFS_PATH ${IPFS}
-RUN apt-get install -y curl
+RUN sudo apt-get install -y curl
 COPY ./install_ipfs.sh ${GOPATH}/bin/
 RUN install_ipfs.sh
 # setup IPFS
@@ -59,7 +69,7 @@ RUN git clone https://github.com/singnet/snet-cli
 WORKDIR ${SINGNET}/snet-cli
 #RUN git checkout -b demo v0.1.8
 RUN ./scripts/blockchain install
-RUN pip3 install -e .
+RUN sudo pip3 install -e .
 
 # snet-daemon
 WORKDIR ${SINGNET}
