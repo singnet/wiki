@@ -102,4 +102,5 @@ RUN snet set current_registry_at ${REGISTRY_ADDR}
 RUN snet set current_multipartyescrow_at ${MULTIPARTYESCROW_ADDR}
 
 COPY ./start_environment.sh ${GOPATH}/bin/
+COPY ./stop_service.sh ${GOPATH}/bin
 CMD start_environment.sh

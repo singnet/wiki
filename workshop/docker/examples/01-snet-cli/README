@@ -5,7 +5,7 @@ snet identity deployer
 snet client balance
 snet contract SingularityNetToken transferTokens $CLIENT_ADDR 100000000000 --transact --yes
 
-# deposit tokents into MultiPartyEscrow contract
+# deposit tokens into MultiPartyEscrow contract
 snet identity client
 snet client balance
 snet client deposit 1000 -y
