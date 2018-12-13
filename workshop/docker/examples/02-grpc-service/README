@@ -1,3 +1,10 @@
+#
+# This example demonstrates how to write and publish gRPC Python service
+# [snet-cli repo documentation](https://github.com/singnet/snet-cli)
+# [snet-daemon repo documentation](https://github.com/singnet/snet-daemon/)
+# [gRPC python quickstart](https://grpc.io/docs/quickstart/python.html)
+#
+
 # compile service API
 cat echo_service.proto
 python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. ./echo_service.proto
@@ -29,3 +36,5 @@ snet client call 0 3 localhost:8080 echo '{"message": "hello"}'
 
 # stop the service
 stop_service.sh
+
+# next example

@@ -1,4 +1,7 @@
+#
 # This example demonstrates how to use snet-cli tool
+# [snet-cli repo documentation](https://github.com/singnet/snet-cli)
+#
 
 # transfer tokens to the caller
 snet identity deployer

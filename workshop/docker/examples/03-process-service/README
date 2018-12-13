@@ -1,3 +1,9 @@
+#
+# This example demonstrates how to write and publish commend line Python service
+# [snet-cli repo documentation](https://github.com/singnet/snet-cli)
+# [snet-daemon repo documentation](https://github.com/singnet/snet-daemon/)
+#
+
 # publish service to the Registry
 snet identity publisher
 snet service metadata_init . ProcessService $PUBLISHER_ADDR --encoding json --service_type process
@@ -17,3 +23,5 @@ snet client call 1 3 localhost:8080 echo '{"message": "hello"}'
 
 # stop service
 stop_service.sh
+
+# next example
