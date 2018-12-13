@@ -20,9 +20,10 @@ In this tutorial we'll create an Opencog service and publish it in SingularityNE
 Setup and run a docker container. 
 
 ```
-$ git clone https://github.com/singnet/opencog-services.git
-$ docker build -t opencog_service_dev opencog-services/Docker/
-$ docker run --name OPENCOG_SERVICE_DEV -ti opencog_service_dev /bin/bash
+$ docker image build -t opencog_services_basic https://raw.githubusercontent.com/singnet/opencog-services/master/basic-dockerfile
+$ docker image build -t opencog_services https://raw.githubusercontent.com/singnet/opencog-services/master/Dockerfile
+$ docker run --name OPENCOG_SERVICE_DEV -ti opencog_services /bin/bash
+
 ```
 
 From this point we follow the turorial in the Docker container's prompt.
