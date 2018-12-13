@@ -1,12 +1,15 @@
+#
 # This example demonstrates how to use snet-cli tool
+# [snet-cli repo documentation](https://github.com/singnet/snet-cli)
+#
 
-# transfer tokens to the client
+# transfer tokens to the caller
 snet identity deployer
 snet client balance
-snet contract SingularityNetToken transferTokens $CLIENT_ADDR 100000000000 --transact --yes
+snet contract SingularityNetToken transferTokens $CALLER_ADDR 100000000000 --transact --yes
 
 # deposit tokens into MultiPartyEscrow contract
-snet identity client
+snet identity caller
 snet client balance
 snet client deposit 1000 -y
 snet client balance

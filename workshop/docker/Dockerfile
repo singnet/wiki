@@ -89,8 +89,8 @@ RUN git clone https://github.com/singnet/wiki
 ENV NETWORK_ID 12345
 ENV DEPLOYER_ADDR 0x592E3C0f3B038A0D673F19a18a773F993d4b2610
 ENV DEPLOYER_KEY 0xc71478a6d0fe44e763649de0a0deb5a080b788eefbbcf9c6f7aef0dd5dbd67e0
-ENV CLIENT_ADDR 0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB
-ENV CLIENT_KEY 0x04899d5fd471ce68f84a5ec64e2e4b6b045d8b850599a57f5b307024be01f262
+ENV CALLER_ADDR 0x3b2b3C2e2E7C93db335E69D827F3CC4bC2A2A2cB
+ENV CALLER_KEY 0x04899d5fd471ce68f84a5ec64e2e4b6b045d8b850599a57f5b307024be01f262
 ENV PUBLISHER_ADDR 0x0067b427E299Eb2A4CBafc0B04C723F77c6d8a18
 ENV PUBLISHER_KEY 0xba398df3130586b0d5e6ef3f757bf7fe8a1299d4b7268fdaae415952ed30ba87
 ENV TOKEN_ADDR 0x6e5f20669177f5bdf3703ec5ea9c4d4fe3aabd14
@@ -103,7 +103,7 @@ RUN snet || true
 COPY ./add_local_network.sh ${GOPATH}/bin
 RUN add_local_network.sh
 RUN snet identity create deployer key --private-key ${DEPLOYER_KEY}
-RUN snet identity create client key --private-key ${CLIENT_KEY}
+RUN snet identity create caller key --private-key ${CALLER_KEY}
 RUN snet identity deployer
 RUN snet network local
 RUN snet set default_ipfs_endpoint http://localhost:5002
