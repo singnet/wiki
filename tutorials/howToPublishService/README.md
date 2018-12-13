@@ -250,9 +250,11 @@ For our example, replace tags with these values:
 }
 ```
 
-Now run the service (that will run and instance of `SNET Daemon`) from the same path where `snet.config.json` is:
+Now compile the protobuf file and run the service (that will run and instance of `SNET Daemon`) 
+from the same path where `snet.config.json` is:
 
 ```
+# sh buildproto.sh
 # python3.6 run_example_service.py
 ```
 
