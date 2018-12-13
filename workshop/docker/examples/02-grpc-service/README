@@ -23,7 +23,7 @@ cat snetd.config.json
 screen -d -m snetd-linux-amd64
 
 # call service via SingularityNet
-snet identity client
+snet identity caller
 snet client open_init_channel_registry ExampleOrganization EchoService 50 57600 -y
 snet client call 0 3 localhost:8080 echo '{"message": "hello"}'
 
