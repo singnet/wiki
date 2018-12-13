@@ -72,15 +72,23 @@ If you want to join an existing organization (e.g. `snet`), ask the owner to add
 
 ## Step 5
 
-Build a JSON configuration file for your service.
+In this tutorial we'll use a simple service from [SingularityNET Example Service](https://github.com/singnet/example-service).
 
-In this tutorial we use a simple service implemented in [SingularityNET Example Service](https://github.com/singnet/example-service).
+* Clone the git repository:
 
 ```
 # git clone https://github.com/singnet/example-service.git
 # cd example-service
 ```
-To build the JSON configuration file, execute the following command and enter the requested information.
+
+* Install the dependencies and compile the protobuf file:
+
+```
+# pip3 install -r requirements.txt
+# sh buildproto.sh
+```
+
+To start the setup of your service, execute the following command:
 
 ```
 # snet service metadata_init SERVICE_PROTOBUF_DIR SERVICE_DISPLAY_NAME PAYMENT_ADDRESS
