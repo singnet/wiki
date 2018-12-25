@@ -1,3 +1,5 @@
+# This repo is deprecated, please use https://github.com/singnet/dev-portal instead
+
 # SingularityNET Documentation Wiki
 
 > SingularityNET is still under active development. The design is
